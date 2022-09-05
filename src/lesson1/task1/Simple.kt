@@ -76,7 +76,6 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = TODO()
  */
 fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = TODO()
 
-
 /**
  * Тривиальная (1 балл)
  *
