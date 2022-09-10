@@ -68,7 +68,17 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String = when {
+    age == 111 -> "$age лет"
+    age == 1 -> "$age год"
+    ((age % 100) % 10) == 1 -> "$age год"
+    age == 0 -> "$age лет"
+    (age % 100) in 12..14 -> "$age лет"
+    ((age % 100) % 10) in 5..9 -> "$age лет"
+    ((age % 100) % 10) in 2..4 -> "$age года"
+    age !in 12..14 -> "$age года"
+    else -> "$age год"
+}
 
 /**
  * Простая (2 балла)
@@ -81,7 +91,15 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+
+): Double{
+    val halfWay = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    return when {
+        halfWay <= (v1 * t1) -> halfWay / v1
+        halfWay >= (v1 * t1) + (v2 * t2) -> t1 + t2 + (halfWay - (t1 * v1) - (t2 * v2)) / v3
+        else -> t1 + (halfWay - (t1 * v1)) / v2
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -96,7 +114,16 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int = when {
+    rookX1 == kingX && rookX2 == kingX -> 3
+    rookX1 == kingX && rookY2 == kingY -> 3
+    rookY1 == kingY && rookY2 == kingX -> 3
+    rookY1 == kingY && rookX2 == kingX -> 3
+    rookX1 == kingX && rookX2 != kingX && rookY2 != kingY -> 1
+    rookY1 == kingY && rookX2 != kingX && rookY2 != kingY -> 1
+    rookX1 != kingX && rookX2 != kingX && rookY1 != kingY && rookY2 != kingY -> 0
+    else -> 2
+}
 
 /**
  * Простая (2 балла)
@@ -132,4 +159,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+    when {
+        b < c -> -1
+        else -> b - c
+    }
