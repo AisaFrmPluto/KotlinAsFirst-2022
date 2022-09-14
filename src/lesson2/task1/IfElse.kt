@@ -139,7 +139,15 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int = when {
+    (kingX % bishopX != 0 && kingY % bishopY != 0) && rookX == kingX -> 1
+    (kingX % bishopX != 0 && kingY % bishopY != 0) && rookY == kingY -> 1
+    kingX % bishopX == 0 && kingY % bishopY == 0 && rookX != kingX -> 2
+    kingX % bishopX == 0 && kingY % bishopY == 0 && rookY != kingY -> 2
+    kingX % bishopX == 0 && kingY % bishopY == 0 && rookX == kingX -> 2
+    kingX % bishopX == 0 && kingY % bishopY == 0 && rookY == kingY -> 2
+    else -> 0
+}
 
 /**
  * Простая (2 балла)
