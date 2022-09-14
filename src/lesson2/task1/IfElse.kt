@@ -3,6 +3,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -140,12 +141,10 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int = when {
-    (kingX % bishopX != 0 && kingY % bishopY != 0) && rookX == kingX -> 1
-    (kingX % bishopX != 0 && kingY % bishopY != 0) && rookY == kingY -> 1
-    kingX % bishopX == 0 && kingY % bishopY == 0 && rookX != kingX -> 2
-    kingX % bishopX == 0 && kingY % bishopY == 0 && rookY != kingY -> 2
-    kingX % bishopX == 0 && kingY % bishopY == 0 && rookX == kingX -> 2
-    kingX % bishopX == 0 && kingY % bishopY == 0 && rookY == kingY -> 2
+    (kotlin.math.abs(kingX - bishopX) != kotlin.math.abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 1
+    (kotlin.math.abs(kingX - bishopX) == kotlin.math.abs(kingY - bishopY)) && (rookX != kingX && rookY != kingY) -> 2
+    (kotlin.math.abs(kingX - bishopX) == kotlin.math.abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 3
+
     else -> 0
 }
 
@@ -157,8 +156,12 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
-
+fun triangleKind(a: Double, b: Double, c: Double): Int = when {
+    sqr(a) == sqr(b) + sqr(c) || sqr(b) == sqr(a) + sqr(c) || sqr(c) == sqr(b) + sqr(a) -> 1
+    sqr(a) + sqr(b) < sqr(c) -> 2
+    (a >= b + c) || (b >= a + c) || (c >= a + b) -> -1
+    else -> 0
+}
 /**
  * Средняя (3 балла)
  *
@@ -169,6 +172,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     when {
-        b < c -> -1
-        else -> b - c
+        b < c || d < a -> -1
+        c < a && b < d -> b - a
+        a < c && d > b -> b - c
+        c < a && d < b -> d - a
+        a < c && d < b -> d - c
+        else -> 0
     }
