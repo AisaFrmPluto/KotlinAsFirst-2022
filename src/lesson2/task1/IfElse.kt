@@ -156,6 +156,7 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int = when {
+    (a >= b + c) || (b >= a + c) || (c >= a + b) -> -1
     sqr(a) == sqr(b) + sqr(c) || sqr(b) == sqr(a) + sqr(c) || sqr(c) == sqr(b) + sqr(a) -> 1
     sqr(a) + sqr(b) < sqr(c) -> 2
     (a >= b + c) || (b >= a + c) || (c >= a + b) -> -1
@@ -171,6 +172,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = when {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     when {
+        a == c && b == d -> b - a
         b < c || d < a -> -1
         c < a && b < d -> b - a
         a < c && d > b -> b - c
