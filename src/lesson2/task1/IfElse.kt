@@ -4,6 +4,7 @@ package lesson2.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -70,13 +71,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    (age % 10) == 0 -> "$age лет"
-    (age % 100) in 11..14 -> "$age лет"
-    age == 1 -> "$age год"
-    ((age % 100) % 10) == 1 -> "$age год"
-    ((age % 100) % 10) in 5..9 -> "$age лет"
-    ((age % 100) % 10) in 2..4 -> "$age года"
-    age !in 12..14 -> "$age года"
+    ((age % 10) == 0) || ((age % 100) in 11..14) || (((age % 100) % 10) in 5..9) -> "$age лет"
+    (age == 1) || (((age % 100) % 10) == 1) -> "$age год"
+    (((age % 100) % 10) in 2..4) || (age !in 12..14) -> "$age года"
     else -> "$age год"
 }
 
@@ -116,13 +113,11 @@ fun whichRookThreatens(
     rookX2: Int, rookY2: Int
 ): Int = when {
     rookX1 != kingX && rookX2 != kingX && rookY1 != kingY && rookY2 != kingY -> 0
-    rookX1 == kingX && rookX2 != kingX && rookY2 != kingY -> 1
-    rookY1 == kingY && rookX2 != kingX && rookY2 != kingY -> 1
-    rookX1 == kingX && rookX2 == kingX -> 3
-    rookX1 == kingX && rookY2 == kingY -> 3
-    rookY1 == kingY && rookY2 == kingY -> 3
-    rookY1 == kingY && rookX2 == kingX -> 3
+    (rookX1 == kingX && rookX2 != kingX && rookY2 != kingY)
+            || (rookY1 == kingY && rookX2 != kingX && rookY2 != kingY) -> 1
 
+    (rookX1 == kingX && rookX2 == kingX) || rookX1 == kingX
+            || (rookY1 == kingY && rookY2 == kingY) || rookY1 == kingY -> 3
 
     else -> 2
 }
@@ -142,9 +137,9 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int = when {
-    (kotlin.math.abs(kingX - bishopX) != kotlin.math.abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 1
-    (kotlin.math.abs(kingX - bishopX) == kotlin.math.abs(kingY - bishopY)) && (rookX != kingX && rookY != kingY) -> 2
-    (kotlin.math.abs(kingX - bishopX) == kotlin.math.abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 3
+    (abs(kingX - bishopX) != abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 1
+    (abs(kingX - bishopX) == abs(kingY - bishopY)) && (rookX != kingX && rookY != kingY) -> 2
+    (abs(kingX - bishopX) == abs(kingY - bishopY)) && (rookX == kingX || rookY == kingY) -> 3
 
     else -> 0
 }
@@ -160,8 +155,7 @@ fun rookOrBishopThreatens(
 fun triangleKind(a: Double, b: Double, c: Double): Int = when {
     (a >= b + c) || (b >= a + c) || (c >= a + b) -> -1
     sqr(a) == sqr(b) + sqr(c) || sqr(b) == sqr(a) + sqr(c) || sqr(c) == sqr(b) + sqr(a) -> 1
-    sqr(a) + sqr(b) < sqr(c) -> 2
-    (a >= b + c) || (b >= a + c) || (c >= a + b) -> -1
+    sqr(a) + sqr(b) < sqr(c) || sqr(c) + sqr(b) < sqr(a) || sqr(a) + sqr(c) < sqr(b) -> 2
     else -> 0
 }
 /**
