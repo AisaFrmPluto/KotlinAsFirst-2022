@@ -156,10 +156,12 @@ fun mean(list: List<Double>): Double {
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
     if (list.isEmpty()) return list
-    else for (i in list.indices) {
-        list[i] = (list[i] - mean).toInt().toDouble()
+    else {
+        for (i in list.indices) {
+            list[i] = (list[i] - mean).toInt().toDouble()
+        }
+        return list
     }
-    return list
 }
 
 /**
@@ -209,8 +211,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
     var e = 0
     if (list.isEmpty()) return list
     else for (i in 1 until list.size) {
-        e += list[i]
-        list[i] = e + list[0]
+        list[i] += list[i - 1]
     }
     return list
 }
