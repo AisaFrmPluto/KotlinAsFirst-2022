@@ -3,7 +3,7 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
-import java.lang.Math.sqrt
+import java.lang.Math.*
 
 /**
  * Пример
@@ -20,7 +20,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-    (number / 1000) + ((number % 1000) / 100) == ((number % 100) / 10) + ((number % 100) % 10)
+    (number / 1000) + ((number % 1000) / 100) == ((number % 100) / 10) + (number % 10)
 
 /**
  * Простая (2 балла)
@@ -29,7 +29,8 @@ fun isNumberHappy(number: Int): Boolean =
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = (x1 == x2) || (y1 == y2) || (kotlin.math.abs(x2 - x1) == kotlin.math.abs(y2 - y1))
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = (x1 == x2) || (y1 == y2) ||
+        (abs(x2 - x1) == abs(y2 - y1))
 
 
 /**
@@ -39,15 +40,11 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = (x1 == x2) || 
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int = when {
-    (month % 2 == 1) && month <= 7 -> 31
-    (month % 2 == 0) && month >= 8 -> 31
+    ((month % 2 == 1) && month <= 7) || ((month % 2 == 0) && month >= 8) -> 31
     (month == 2) && (year % 4 == 0) && (year % 100 == 0) && (year % 400 == 0) -> 29
-    (month == 2) && (year % 4 == 0) && (year % 100 == 0) -> 28
-    (month == 2) && (year % 4 != 0) -> 28
+    ((month == 2) && (year % 4 == 0) && (year % 100 == 0)) || ((month == 2) && (year % 4 != 0)) -> 28
     (month == 2) && (year % 100 == 0) && (year % 400 == 0) -> 29
     (month == 2) -> 29
-
-
     else -> 30
 }
 
@@ -62,7 +59,7 @@ fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
 ): Boolean {
-    val dis = kotlin.math.sqrt(sqr(x2 - x1) + sqr(y2 - y1))
+    val dis = sqrt(sqr(x2 - x1) + sqr(y2 - y1))
     return dis + r1 <= r2
 }
 
@@ -75,5 +72,4 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = ((r >= b) && (s >= a)) || ((r >= a) && (s >= b))
-        || (((r >= c) && (s >= b)) || ((r >= b) && (s >= c))) || ((r >= c) && (s >= a)) || ((r >= a) && (s >= c))
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = r >= min(max(a, b), c)
