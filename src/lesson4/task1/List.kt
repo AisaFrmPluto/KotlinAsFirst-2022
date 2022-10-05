@@ -225,22 +225,19 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var list = listOf<Int>()
+    val list = mutableListOf<Int>()
     var n1 = n
+    var i = 2
     return if (isPrime(n1)) list + n
     else {
-        if (n1 % 2 == 0) {
-            while (n1 % 2 == 0) {
-                list + 2
-                n1 /= 2;
+        while (n1 > 1) {
+            while (n1 % i == 0) {
+                list.add(i)
+                n1 /= i
             }
-        } else
-            for (j in 3..sqrt(n1.toDouble()).toInt() step 2) {
-                while (n1 % j == 0) {
-                    list + j
-                }
-                break
-            }
+            i++
+            if (n1 % i != 0) i++
+        }
         return list
     }
 }
@@ -252,7 +249,16 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    var result = ""
+    var el: String
+    val list = factorize(n)
+    for (element in list) {
+        el = element.toString()
+        result = "$result$el*"
+    }
+    return result.dropLast(1)
+}
 
 /**
  * Средняя (3 балла)
@@ -261,7 +267,22 @@ fun factorizeToString(n: Int): String = TODO()
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    val list1 = mutableListOf<Int>()
+    val list2 = mutableListOf<Int>()
+    var n1 = n
+    return if (n < base) list1 + n
+    else {
+        while (n1 / base > 0) {
+            list1.add(n1 % base)
+            n1 /= base
+        }
+        for (i in list1.size downTo 0) {
+            list2.add(list1[i])
+        }
+        list2
+    }
+}
 
 /**
  * Сложная (4 балла)
