@@ -273,7 +273,7 @@ fun convert(n: Int, base: Int): List<Int> {
     var n1 = n
     return if (n < base) list1 + n
     else {
-        while (n1 / base > 0) {
+        while (n1 / base >= 0) {
             list1.add(n1 % base)
             n1 /= base
         }
