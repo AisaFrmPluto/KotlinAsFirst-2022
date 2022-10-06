@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import lesson3.task1.isPrime
+import ru.spbstu.wheels.repeatB
 import kotlin.math.sqrt
 import kotlin.math.pow
 
@@ -273,11 +274,12 @@ fun convert(n: Int, base: Int): List<Int> {
     var n1 = n
     return if (n < base) list1 + n
     else {
-        while (n1 / base >= 0) {
+        while (n1 / base > 0) {
             list1.add(n1 % base)
             n1 /= base
         }
-        for (i in list1.size downTo 0) {
+        list1.add(n1 % base)
+        for (i in list1.size - 1 downTo 0) {
             list2.add(list1[i])
         }
         list2
@@ -304,7 +306,18 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var b = base
+    var result = digits[digits.size - 1]
+    return if (digits.size == 1) digits[0]
+    else {
+        for (i in digits.size - 2 downTo 0) {
+            result += b * digits[i]
+            b *= base
+        }
+        return result
+    }
+}
 
 /**
  * Сложная (4 балла)
@@ -328,7 +341,79 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val list = mutableListOf<String>()
+    var n1 = n
+    var result = ""
+    while (n1 != 0) {
+        if (n1 >= 1000)
+            repeat(n1 / 1000) {
+                list.add("M")
+            }
+        n1 %= 1000
+        if (n1 >= 900)
+            repeat(n1 / 900) {
+                list.add("CM")
+            }
+        n1 %= 900
+        if (n1 >= 500)
+            repeat(n1 / 500) {
+                list.add("D")
+            }
+        n1 %= 500
+        if (n1 >= 400)
+            repeat(n1 / 400) {
+                list.add("CD")
+            }
+        n1 %= 400
+        if (n1 >= 100)
+            repeat(n1 / 100) {
+                list.add("C")
+            }
+        n1 %= 100
+        while (n1 >= 90)
+            repeat(n1 / 90) {
+                list.add("XC")
+            }
+        n1 %= 90
+        if (n1 >= 50)
+            repeat(n1 / 50) {
+                list.add("L")
+            }
+        n1 %= 50
+        if (n1 >= 40)
+            repeat(n1 / 40) {
+                list.add("XL")
+            }
+        n1 %= 40
+        if (n1 >= 10)
+            repeat(n1 / 10) {
+                list.add("X")
+            }
+        n1 %= 10
+        if (n1 == 9)
+            repeat(n1 / 9) {
+                list.add("IX")
+            }
+        if (n1 >= 5)
+            repeat(n1 / 5) {
+                list.add("V")
+            }
+        n1 %= 5
+        if (n1 == 4)
+            repeat(n1 / 4) {
+                list.add("IV")
+            }
+        if (n1 >= 1)
+            repeat(n1 / 1) {
+                list.add("I")
+            }
+        for (i in 0 until list.size) {
+            result += list[i]
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)
