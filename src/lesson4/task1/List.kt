@@ -5,9 +5,8 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import lesson3.task1.isPrime
-import ru.spbstu.wheels.repeatB
-import kotlin.math.sqrt
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -144,7 +143,7 @@ fun mean(list: List<Double>): Double {
     else for (element in list) {
         result = (result + element).toInt()
     }
-    return (result / list.size).toDouble()
+    return result / list.size.toDouble()
 }
 
 /**
@@ -157,12 +156,11 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    if (list.isEmpty()) return list
+    return if (list.isEmpty()) list
     else {
-        for (i in list.indices) {
+        for (i in list.indices)
             list[i] = (list[i] - mean).toInt().toDouble()
-        }
-        return list
+        list
     }
 }
 
@@ -342,76 +340,17 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val list = mutableListOf<String>()
-    var n1 = n
     var result = ""
-    while (n1 != 0) {
-        if (n1 >= 1000)
-            repeat(n1 / 1000) {
-                list.add("M")
-            }
-        n1 %= 1000
-        if (n1 >= 900)
-            repeat(n1 / 900) {
-                list.add("CM")
-            }
-        n1 %= 900
-        if (n1 >= 500)
-            repeat(n1 / 500) {
-                list.add("D")
-            }
-        n1 %= 500
-        if (n1 >= 400)
-            repeat(n1 / 400) {
-                list.add("CD")
-            }
-        n1 %= 400
-        if (n1 >= 100)
-            repeat(n1 / 100) {
-                list.add("C")
-            }
-        n1 %= 100
-        while (n1 >= 90)
-            repeat(n1 / 90) {
-                list.add("XC")
-            }
-        n1 %= 90
-        if (n1 >= 50)
-            repeat(n1 / 50) {
-                list.add("L")
-            }
-        n1 %= 50
-        if (n1 >= 40)
-            repeat(n1 / 40) {
-                list.add("XL")
-            }
-        n1 %= 40
-        if (n1 >= 10)
-            repeat(n1 / 10) {
-                list.add("X")
-            }
-        n1 %= 10
-        if (n1 == 9)
-            repeat(n1 / 9) {
-                list.add("IX")
-            }
-        if (n1 >= 5)
-            repeat(n1 / 5) {
-                list.add("V")
-            }
-        n1 %= 5
-        if (n1 == 4)
-            repeat(n1 / 4) {
-                list.add("IV")
-            }
-        if (n1 >= 1)
-            repeat(n1 / 1) {
-                list.add("I")
-            }
-        for (i in 0 until list.size) {
-            result += list[i]
-        }
-    }
+    val th = listOf("", "M", "MM", "MMM", "MMMM", "MMMMM", "MMMMMM", "MMMMMMM")
+    val hun = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+    val te = listOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
+    val on = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
+    val thousands = th[n / 1000]
+    val hundreds = hun[n % 1000 / 100]
+    val tens = te[n % 100 / 10]
+    val ones = on[n % 10]
+    result = result + thousands + hundreds + tens + ones
+
     return result
 }
 
@@ -422,4 +361,51 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val n1 = listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val n2 = listOf(
+        "", "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать",
+        "семнадцать", "восемнадцать", "девятнадцать"
+    )
+    val n3 = listOf(
+        "", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+        "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
+    )
+    val n4 =
+        listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val n5 = listOf(
+        "", "тысяча", "две тысячи", "три тысячи", "четыре тысячи", "пять тысяч",
+        "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
+    )
+    val n6 = listOf(
+        "", "десять тысяч", "одиннадцать тысяч", "двенадцать тысяч", "тринадцать тысяч", "четырнадцать тысяч",
+        "пятнадцать тысяч", "шестнадцать тысяч", "семнадцать тысяч", "восемнадцать тысяч", "девятнадцать тысяч"
+    )
+    val n7 = listOf(
+        "", "десять тысяч", "двадцать тысяч", "тридцать тысяч", "сорок тысяч", "пятьдесят тысяч", "шестьдесят тысяч",
+        "семьдесят тысяч", "восемьдесят тысяч", "девяносто тысяч"
+    )
+    val n8 = listOf(
+        "", "сто тысяч", "двести тысяч", "триста тысяч", "четыреста тысяч", "пятьсот тысяч", "шестьсот тысяч",
+        "семьсот тысяч", "восемьсот тысяч", "девять сто тысяч"
+    )
+    val onestensthousands = n6[(n / 1000) - (n / 100000)]
+    val hundredthousands = n8[n / 100000]
+    val tenthousands = n7[(n / 1000) / 10]
+    val thousands = n5[(n / 1000) % 10]
+    val hundreds = n4[(n % 1000) / 100]
+    val tens = n3[(n % 100) / 10]
+    val ones = n1[n % 10]
+    val onestens = n2[n % 10]
+    return if (n < 9999 && n % 100 !in 11..19)
+        "$thousands$hundreds $tens $ones"
+    else if (n < 9999 && n % 100 in 11..19)
+        "$thousands$hundreds $onestens"
+    else if ((n % 100 !in 11..19) && (((n / 1000) - (n / 100000)) !in 11..19))
+        "$hundredthousands$tenthousands $thousands $hundreds $tens $ones"
+    else if ((n % 100 !in 11..19) && ((n / 1000) - (n / 100000) in 11..19))
+        "$hundredthousands$onestensthousands $hundreds $tens $ones"
+    else if ((n % 100 in 11..19) && ((n / 1000) - (n / 100000) !in 11..19))
+        "$hundredthousands$tenthousands $thousands $hundreds $onestens"
+    else "$hundredthousands$onestensthousands $hundreds $onestens"
+}
