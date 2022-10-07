@@ -138,10 +138,10 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    var result = 0
+    var result = 0.0
     if (list.isEmpty()) return 0.0
     else for (element in list) {
-        result = (result + element).toInt()
+        result += element
     }
     return result / list.size.toDouble()
 }
@@ -157,9 +157,12 @@ fun mean(list: List<Double>): Double {
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
     return if (list.isEmpty()) list
-    else {
+    else if (list.size == 1) {
+        list[0] = 0.0
+        return list
+    } else {
         for (i in list.indices)
-            list[i] = (list[i] - mean).toInt().toDouble()
+            list[i] = (list[i] - mean)
         list
     }
 }
@@ -362,32 +365,35 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val n1 = listOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val n1 = listOf("", " один", " два", " три", " четыре", " пять", " шесть", " семь", " восемь", " девять")
     val n2 = listOf(
-        "", "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать",
-        "семнадцать", "восемнадцать", "девятнадцать"
+        "", " десять", " одиннадцать", " двенадцать", " тринадцать", " четырнадцать", " пятнадцать", " шестнадцать",
+        " семнадцать", " восемнадцать", " девятнадцать"
     )
     val n3 = listOf(
-        "", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
-        "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
+        "", " десять", " двадцать", " тридцать", " сорок", " пятьдесят",
+        " шестьдесят", " семьдесят", " восемьдесят", " девяносто"
     )
     val n4 =
-        listOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+        listOf(
+            "", " сто", " двести", " триста", " четыреста", " пятьсот", " шестьсот", " семьсот",
+            " восемьсот", " девятьсот"
+        )
     val n5 = listOf(
-        "", "тысяча", "две тысячи", "три тысячи", "четыре тысячи", "пять тысяч",
-        "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
+        "", " тысяча", " две тысячи", " три тысячи", " четыре тысячи", " пять тысяч",
+        " шесть тысяч", " семь тысяч", " восемь тысяч", " девять тысяч"
     )
     val n6 = listOf(
-        "", "десять тысяч", "одиннадцать тысяч", "двенадцать тысяч", "тринадцать тысяч", "четырнадцать тысяч",
-        "пятнадцать тысяч", "шестнадцать тысяч", "семнадцать тысяч", "восемнадцать тысяч", "девятнадцать тысяч"
+        "", " десять тысяч", " одиннадцать тысяч", " двенадцать тысяч", " тринадцать тысяч", " четырнадцать тысяч",
+        " пятнадцать тысяч", " шестнадцать тысяч", " семнадцать тысяч", " восемнадцать тысяч", " девятнадцать тысяч"
     )
     val n7 = listOf(
-        "", "десять тысяч", "двадцать тысяч", "тридцать тысяч", "сорок тысяч", "пятьдесят тысяч", "шестьдесят тысяч",
-        "семьдесят тысяч", "восемьдесят тысяч", "девяносто тысяч"
+        "", " десять тысяч", " двадцать тысяч", " тридцать тысяч", " сорок тысяч", " пятьдесят тысяч",
+        " шестьдесят тысяч", " семьдесят тысяч", " восемьдесят тысяч", " девяносто тысяч"
     )
     val n8 = listOf(
-        "", "сто тысяч", "двести тысяч", "триста тысяч", "четыреста тысяч", "пятьсот тысяч", "шестьсот тысяч",
-        "семьсот тысяч", "восемьсот тысяч", "девять сто тысяч"
+        "", " сто тысяч", " двести тысяч", " триста тысяч", " четыреста тысяч", " пятьсот тысяч", " шестьсот тысяч",
+        " семьсот тысяч", " восемьсот тысяч", " девять сто тысяч"
     )
     val onestensthousands = n6[(n / 1000) - (n / 100000)]
     val hundredthousands = n8[n / 100000]
@@ -398,14 +404,14 @@ fun russian(n: Int): String {
     val ones = n1[n % 10]
     val onestens = n2[n % 10]
     return if (n < 9999 && n % 100 !in 11..19)
-        "$thousands$hundreds $tens $ones"
+        "$thousands$hundreds$tens$ones".removeRange(0, 1)
     else if (n < 9999 && n % 100 in 11..19)
-        "$thousands$hundreds $onestens"
+        "$thousands$hundreds$onestens".removeRange(0, 1)
     else if ((n % 100 !in 11..19) && (((n / 1000) - (n / 100000)) !in 11..19))
-        "$hundredthousands$tenthousands $thousands $hundreds $tens $ones"
+        "$hundredthousands$tenthousands$thousands$hundreds$tens$ones".removeRange(0, 1)
     else if ((n % 100 !in 11..19) && ((n / 1000) - (n / 100000) in 11..19))
-        "$hundredthousands$onestensthousands $hundreds $tens $ones"
+        "$hundredthousands$onestensthousands$hundreds$tens$ones".removeRange(0, 1)
     else if ((n % 100 in 11..19) && ((n / 1000) - (n / 100000) !in 11..19))
-        "$hundredthousands$tenthousands $thousands $hundreds $onestens"
-    else "$hundredthousands$onestensthousands $hundreds $onestens"
+        "$hundredthousands$tenthousands$thousands$hundreds$onestens".removeRange(0, 1)
+    else "$hundredthousands$onestensthousands$hundreds$onestens".removeRange(0, 1)
 }

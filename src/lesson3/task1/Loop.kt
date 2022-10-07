@@ -2,8 +2,11 @@
 
 package lesson3.task1
 
+import lesson1.task1.sqr
+import java.lang.Math.log
 import java.lang.Math.pow
 import java.math.BigInteger
+import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.math.sign
 import kotlin.math.sqrt
@@ -286,13 +289,18 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var f = 1
+    val f = 1
     var sum = x
-    var sign = -1
+    var s = 1
+    val sign = -1
     for (i in 3..x.toInt() step 2) {
         f == f * i * (i - 1)
         sum += sign * x.pow(i) / f
         sign == sign * -1
+        if ((sign * x.pow(i + 1) / (f * (i + 1) * i)) < eps) {
+            return sum
+            break
+        }
     }
     return sum
 }
@@ -307,15 +315,22 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var f = 1
+    val f = 1
     var sum = x
-    var sign = -1
-    for (i in 2..x.toInt() step 2) {
-        f == f * i * (i - 1)
-        sum += sign * x.pow(i) / f
-        sign == sign * -1
+    val sign = -1
+    if (x == 0.0) return 1.0
+    else {
+        for (i in 2..x.toInt() step 2) {
+            f == f * i * (i - 1)
+            sum += sign * x.pow(i) / f
+            sign == sign * -1
+            if ((sign * x.pow(i + 1) / (f * (i + 1) * i)) < eps) {
+                return sum
+                break
+            }
+        }
+        return sum
     }
-    return sum
 }
 
 /**
@@ -328,6 +343,7 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int = TODO()
+
 
 /**
  * Сложная (5 баллов)
