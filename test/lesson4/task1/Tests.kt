@@ -91,6 +91,7 @@ class Tests {
         assertEquals(3.0, abs(listOf(3.0)), 1e-5)
         assertEquals(5.0, abs(listOf(3.0, -4.0)), 1e-5)
         assertEquals(8.774964, abs(listOf(4.0, -5.0, 6.0)), 1e-5)
+        assertEquals(50712570430055514000.0, abs(listOf(-50712570430055514000.0)), 1e-5)
     }
 
     @Test
