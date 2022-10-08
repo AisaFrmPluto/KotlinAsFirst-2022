@@ -90,12 +90,14 @@ fun digitNumber(n: Int): Int {
         while (n / test2 != 0) {
             test2 *= 10
             test3++
+            if (test3 == 10) break
         }
         return test3
     } else
         while (n / test1 != 0) {
             test1 *= 10
             test2++
+            if (test2 == 10) break
         }
     return test2
 }
