@@ -291,8 +291,9 @@ fun sin(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
+    val angle = x % (2 * kotlin.math.PI)
     for (i in 2..100 step 2) {
-        val term = (sign * x.pow(i - 1) / f)
+        val term = (sign * angle.pow(i - 1) / f)
         sum += term
         if (kotlin.math.abs(term) < eps) break
         sign *= -1.0
@@ -314,8 +315,9 @@ fun cos(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
+    val angle = x % (2 * kotlin.math.PI)
     for (i in 1..100 step 2) {
-        val term = (sign * x.pow(i - 1) / f)
+        val term = (sign * angle.pow(i - 1) / f)
         sum += term
         if (kotlin.math.abs(term) < eps) break
         sign *= -1.0
