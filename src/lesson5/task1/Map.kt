@@ -97,6 +97,14 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+//{
+//    var list2 = listOf<String>()
+//    var list3 = listOf<String>()
+//    var list4 = listOf<String>()
+//    var list5 = listOf<String>()
+//    val result = mapOf<Int, List<String>>()
+//   return 0
+//}
 
 /**
  * Простая (2 балла)

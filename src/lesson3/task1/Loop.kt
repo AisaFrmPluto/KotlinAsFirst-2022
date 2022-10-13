@@ -85,21 +85,18 @@ fun digitNumber(n: Int): Int {
     var test2 = 1
     var test3 = 0
     if (n / test1 == 0) return 1
-    if (n == 10) return 2
-    if ((n / 10) % 10 == 0) {
-        while (n / test2 != 0) {
-            test2 *= 10
-            test3++
-            if (test3 == 10) break
-        }
-        return test3
-    } else
-        while (n / test1 != 0) {
-            test1 *= 10
-            test2++
-            if (test2 == 10) break
-        }
-    return test2
+    while (n / test2 != 0) {
+        test2 *= 10
+        test3++
+        if (test3 == 10) break
+    }
+    return test3
+    while (n / test1 != 0) {
+        test1 *= 10
+        test2++
+        if (test2 == 10) break
+        return test2
+    }
 }
 
 /**
@@ -175,14 +172,14 @@ fun collatzSteps(x: Int): Int {
     var steps = 0
     var result = x
     if (x == 1) return 0
-    while (result != 1)
+    while (result != 1) {
         if (result % 2 == 0) {
             result /= 2
-            steps += 1
         } else {
             result = (3 * result) + 1
-            steps += 1
         }
+        steps += 1
+    }
     return steps
 }
 
@@ -237,7 +234,7 @@ fun revert(n: Int): Int {
     var revert = 0
     var rest: Int
 
-    var original: Int = n
+    var original = n
 
     while (original != 0) {
         rest = original % 10
@@ -256,10 +253,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    val result = revert(n)
-    return n == result
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя (3 балла)
@@ -293,7 +287,7 @@ fun sin(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
-    val angle = x % (2 * kotlin.math.PI)
+    val angle = x % (2 * PI)
     for (i in 2..100 step 2) {
         val term = (sign * angle.pow(i - 1) / f)
         sum += term
@@ -317,7 +311,7 @@ fun cos(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
-    val angle = x % (2 * kotlin.math.PI)
+    val angle = x % (2 * PI)
     for (i in 1..100 step 2) {
         val term = (sign * angle.pow(i - 1) / f)
         sum += term
