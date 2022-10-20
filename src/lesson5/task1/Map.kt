@@ -274,9 +274,19 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  * а поле и полено -- нет.
  *
  * Например:
- *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
+ *   assertTrue(hasAnagrams(listOf("лунь", "нуль")))
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    var check = 1
+    for (i in words.indices) {
+        for (j in i + 1 until words.size)
+            if (words[i].toSortedSet() == words[j].toSortedSet()) {
+                check = 2
+                break
+            }
+    }
+    return check == 2
+}
 
 /**
  * Сложная (5 баллов)
