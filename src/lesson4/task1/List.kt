@@ -458,7 +458,7 @@ fun russian(n: Int): String {
     while ((n % 100 in 11..19) && ((n / 1000 % 100) !in 11..19))
         return if (n / 1000 % 100 == 0) {
             (hundTh[100000 * (n / 100000)] + tenTh[1000 * ((n / 10000) % 10)]
-                    + thousands[1000 * ((n / 1000) % 10)] + lastThree).removeRange(0, 1)
+                    + thousands[1000 * ((n / 1000) % 10)] + hundreds[100 * (n / 100 % 10)] + tensSpecial[n % 100]).removeRange(0, 1)
             // exp: 900613
         } else if (n / 1000 % 10 == 0) {
             (hundreds[100 * (n / 100000)] + tenTh[1000 * (n / 1000 % 100)]
