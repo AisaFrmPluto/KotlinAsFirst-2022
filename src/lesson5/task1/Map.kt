@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import lesson4.task1.mean
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -96,7 +98,14 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val result = mutableMapOf<Int, MutableList<String>>()
+    for ((key, value) in grades)
+        if (result[value].isNullOrEmpty())
+            result[value] = mutableListOf(key)
+        else result[value]?.add(key)
+    return result
+}
 
 /**
  * Простая (2 балла)
@@ -143,7 +152,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMa
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b).toList()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b.toSet()).toList()
 
 /**
  * Средняя (3 балла)
@@ -180,7 +189,15 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val result = mutableMapOf<String, Double>()
+    val map = mutableMapOf<String, List<Double>>()
+    for ((first, second) in stockPrices)
+        if (first !in map) map[first] = listOf(second)
+        else map[first] = map[first]!! + (second)
+    for ((key, value) in map) result[key] = mean(value)
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -197,7 +214,17 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var compareTo = 20000.0
+    var result: String? = null
+    for ((key, value) in stuff)
+        if (value.first == kind && value.second <= compareTo) {
+            result = key
+            compareTo = value.second
+        } else
+            result = null
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -208,7 +235,14 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    var counter = 0
+    for (element in word) {
+        if (element in chars)
+            counter += 1
+    }
+    return counter == word.length
+}
 
 /**
  * Средняя (4 балла)
@@ -222,7 +256,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val repeats = mutableMapOf<String, Int>()
+    for (i in list.indices)
+        if (repeats.containsKey(list[i])) repeats[list[i]] = repeats.getValue(list[i]) + 1
+        else repeats[list[i]] = 1
+    return repeats.filterValues { it > 1 } as MutableMap<String, Int>
+}
 
 /**
  * Средняя (3 балла)
