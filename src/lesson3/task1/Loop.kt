@@ -81,7 +81,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 
 fun digitNumber(n: Int): Int {
-    var test1 = 10
+    val test1 = 10
     var test2 = 1
     var test3 = 0
     if (n / test1 == 0) return 1
@@ -91,12 +91,6 @@ fun digitNumber(n: Int): Int {
         if (test3 == 10) break
     }
     return test3
-    while (n / test1 != 0) {
-        test1 *= 10
-        test2++
-        if (test2 == 10) break
-        return test2
-    }
 }
 
 /**
@@ -128,10 +122,11 @@ fun minDivisor(n: Int): Int {
     var result = 0
     if (n % 2 == 0) return 2
     else for (i in 3..sqrt(n.toDouble()).toInt() step 2) {
-        if (n % i == 0) {
+        if (n % i != 0) result = n
+        else {
             result = i
             break
-        } else result = n
+        }
     }
     return result
 }
@@ -141,16 +136,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    var result = 0
-    for (i in n - 1 downTo 1) {
-        if (n % i == 0) {
-            result = i
-            break
-        } else result = n
-    }
-    return result
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая (2 балла)
@@ -190,18 +176,13 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var result = 0
-
-    result += if (n > m) n
-    else m
-
-    while (true) {
-        if (result % n == 0 && result % m == 0) {
-            return result
-            break
-        }
-        ++result
+    var a = m
+    var b = n
+    while (a != b) {
+        if (a > b) a -= b
+        else b -= a
     }
+    return m * n / a
 }
 
 /**

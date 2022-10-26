@@ -365,3 +365,19 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+
+fun binarySearch(list: MutableList<Int>, el: Int): Boolean {
+    var sorted = list.sorted().toMutableList()
+    var check = 0
+    while (sorted.size != 1) {
+        if (sorted[sorted.size / 2] > el) {
+            for (i in sorted.size / 2 until sorted.size)
+                sorted -= i
+        } else if (sorted[sorted.size / 2] < el) {
+            for (i in sorted.size / 2 downTo 0)
+                sorted -= i
+        }
+    }
+    if (sorted[0] == el) check = 1
+    return check == 1
+}
