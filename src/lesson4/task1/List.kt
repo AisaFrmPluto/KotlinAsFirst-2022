@@ -125,8 +125,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  */
 fun abs(v: List<Double>): Double {
     var result = 0
-    return if (v.isEmpty()) 0.0
-    else if (v.size == 1) if (v[0] > 0.0) v[0] else -v[0]
+    return if (v.size == 1) kotlin.math.abs(v[0])
     else sqrt(v.sumOf { sqr(it) })
 }
 
@@ -154,12 +153,8 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    return if (list.isEmpty()) list
-    else {
-        for (i in list.indices)
-            list[i] = (list[i] - mean)
-        list
-    }
+    for (i in list.indices) list[i] -= mean
+    return list
 }
 
 /**

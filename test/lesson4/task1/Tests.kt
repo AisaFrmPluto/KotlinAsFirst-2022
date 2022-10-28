@@ -123,14 +123,10 @@ class Tests {
             center(mutableListOf(0.0, 2.0, 7.0, 8.0, -2.0)).toDoubleArray(),
             1e-5
         )
-        assertArrayEquals(
-            listOf(-0.5, 0.5).toDoubleArray(),
-            center(mutableListOf(0.0, 0.1)).toDoubleArray(),
-            1e-5
-        )
         val toMutate = mutableListOf(-3.0, -1.0, 4.0, 5.0, -5.0)
         assertTrue(toMutate === center(toMutate)) { "You should mutate an input list, not create a copy" }
     }
+
 
     @Test
     @Tag("3")
