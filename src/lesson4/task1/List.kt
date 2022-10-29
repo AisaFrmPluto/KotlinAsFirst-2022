@@ -275,7 +275,6 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val c = convert(n, base)
-    val listResult = mutableListOf<String>()
     val map = mapOf<Int, String>(
         10 to "a", 11 to "b", 12 to "c", 13 to "d", 14 to "e", 15 to "f", 16 to "g", 17 to "h", 18 to "i",
         19 to "j", 20 to "k", 21 to "l", 22 to "m", 23 to "n", 24 to "o", 25 to "p", 26 to "q", 27 to "r", 28 to "s",
@@ -285,13 +284,10 @@ fun convertToString(n: Int, base: Int): String {
     if (n < 10) return n.toString()
     else {
         for (i in c.indices) {
-            listResult += if (c[i] in 10..35) {
-                map[c[i]].toString()
+            if (c[i] in 10..35) {
+                result.append(map[c[i]].toString())
             } else
-                c[i].toString()
-        }
-        for (j in listResult.indices) {
-            result.append(listResult[j])
+                result.append(c[i].toString())
         }
     }
     return result.toString()
