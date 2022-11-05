@@ -84,9 +84,10 @@ fun dateStrToDigit(str: String): String {
         val yyyy = parts[2]
         val months = mapOf<String?, String?>(
             "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
-            "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11", "декабря" to "12"
+            "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
+            "декабря" to "12"
         )
-        if (jj.toInt() < 10)
+        if ((jj.toInt() < 10) && jj.length == 1)
             jj = "0$jj"
         if (mm in months)
             mm = months[mm]
