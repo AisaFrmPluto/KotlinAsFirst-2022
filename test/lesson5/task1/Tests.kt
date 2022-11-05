@@ -337,11 +337,6 @@ class Tests {
         )
     }
 
-    @Test
-    @Tag("8")
-    fun binarySearch() {
-        assertTrue(binarySearch(mutableListOf(1, 2, 30, 4, 50), 7))
-    }
 }
 
 
