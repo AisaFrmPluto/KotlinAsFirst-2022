@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
+import kotlin.math.exp
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -195,8 +196,7 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     var result = -1
-    var parts = mutableListOf<String>()
-    parts = jumps.split(" ") as MutableList<String>
+    val parts = jumps.split(" ") as MutableList<String>
     val list = mutableListOf<String>()
     return if (jumps.contains(Regex("""[^\d\s\-%+]""")) ||
         !jumps.contains(Regex("""\d"""))
@@ -226,7 +226,29 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (!"$expression + ".matches(Regex("""(\d+ [+-] )+"""))) {
+        throw IllegalArgumentException(expression)
+    }
+    val parts = expression.split(" ") as MutableList<String>
+    val numbers = mutableListOf<Int>()
+    val signs = mutableListOf<String>()
+    return if (expression.contains(Regex("""[^\d\s\-+]""")) ||
+        !expression.matches(Regex("""(\d+ [+-] )*\d+"""))
+    ) -1
+    else {
+        for (i in 0 until parts.size step 2)
+            numbers += parts[i].toInt()
+        for (i in 1 until parts.size step 2)
+            signs += parts[i]
+        var result = numbers[0]
+        for (i in 0 until signs.size) {
+            if (signs[i] == "+") result += numbers[i + 1]
+            else result -= numbers[i + 1]
+        }
+        result
+    }
+}
 
 /**
  * Сложная (6 баллов)
@@ -237,7 +259,21 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ") as MutableList<String>
+    var result = parts[0].length
+    var i = 0
+    var check = ""
+    return if (!str.matches(Regex("""(\S+ )+\S+"""))) -1
+    else {
+        while (parts[i].toUpperCase() != parts[i + 1].toUpperCase()) {
+            result += parts[i + 1].length + 1
+            check = parts[i + 1]
+            i++
+        }
+        result - check.length
+    }
+}
 
 /**
  * Сложная (6 баллов)
@@ -250,7 +286,17 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val parts = description.split(" ") as MutableList<String>
+    var result = ""
+    return if (!description.matches(Regex("""(\S+ \d+\.\d+; )*\S+ \d+\.\d+"""))) ""
+    else if (parts.size == 2) parts[0]
+    else {
+        for (i in 1 until parts.size - 2 step 2)
+            if ((parts[i + 2].dropLast(1)).toDouble() > (parts[i].dropLast(1)).toDouble()) result = parts[i + 1]
+        result
+    }
+}
 
 /**
  * Сложная (6 баллов)
