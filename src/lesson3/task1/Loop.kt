@@ -81,16 +81,14 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 
 fun digitNumber(n: Int): Int {
-    val test1 = 10
-    var test2 = 1
-    var test3 = 0
-    if (n / test1 == 0) return 1
-    while (n / test2 != 0) {
-        test2 *= 10
-        test3++
-        if (test3 == 10) break
+    if (n == 0) return 1
+    var num = n
+    var result = 0
+    while (num != 0) {
+        num /= 10
+        result += 1
     }
-    return test3
+    return result
 }
 
 /**
@@ -192,17 +190,7 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    var gcd = 1
-    var i = 1
-    while (i <= n && i <= m) {
-        if (n % i == 0 && m % i == 0)
-            gcd = i
-        ++i
-    }
-    return gcd == 1
-}
-
+fun isCoPrime(m: Int, n: Int): Boolean = (m * n) / lcm(m, n) == 1
 
 /**
  * Средняя (3 балла)
@@ -268,13 +256,14 @@ fun sin(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
+    var i = 2
     val angle = x % (2 * PI)
-    for (i in 2..100 step 2) {
+    while (abs(sign * angle.pow(i - 1) / f) > eps) {
         val term = (sign * angle.pow(i - 1) / f)
         sum += term
-        if (kotlin.math.abs(term) < eps) break
         sign *= -1.0
         f *= i * (i + 1)
+        i += 2
     }
     return sum
 }
@@ -292,13 +281,14 @@ fun cos(x: Double, eps: Double): Double {
     var f = 1.0
     var sum = 0.0
     var sign = 1.0
+    var i = 1
     val angle = x % (2 * PI)
-    for (i in 1..100 step 2) {
+    while (abs(sign * angle.pow(i - 1) / f) > eps) {
         val term = (sign * angle.pow(i - 1) / f)
         sum += term
-        if (kotlin.math.abs(term) < eps) break
         sign *= -1.0
         f *= i * (i + 1)
+        i += 2
     }
     return sum
 }
@@ -324,4 +314,16 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var numbers = 1
+    var result = ""
+    var input = n
+    while (input > 0) {
+        val fib = fib(numbers)
+        result = "$fib"
+        numbers++
+        input -= result.length
+    }
+    numbers = result.length - 1 + input
+    return result[numbers].toString().toInt()
+}

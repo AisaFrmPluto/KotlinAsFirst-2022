@@ -191,11 +191,16 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val result = mutableMapOf<String, Double>()
-    val map = mutableMapOf<String, List<Double>>()
-    for ((first, second) in stockPrices)
-        if (first !in map) map[first] = listOf(second)
-        else map[first] = map[first]!! + (second)
-    for ((key, value) in map) result[key] = mean(value)
+    val map = mutableMapOf<String, Int>()
+    for (i in stockPrices.indices)
+        if (!result.containsKey(stockPrices[i].first)) result[stockPrices[i].first] = stockPrices[i].second
+        else {
+            if (map[stockPrices[i].first] == null) map[stockPrices[i].first] = 2
+            else map[stockPrices[i].first] = map.getValue(stockPrices[i].first) + 1
+            result[stockPrices[i].first] =
+                (result.getValue(stockPrices[i].first) + stockPrices[i].second)
+        }
+    for ((key) in map) result[key] = result.getValue(key) / map.getValue(key)
     return result
 }
 
@@ -235,14 +240,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    var counter = 0
-    for (element in word) {
-        if (element in chars)
-            counter += 1
-    }
-    return counter == word.length
-}
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+    (word.toSet().intersect(chars.map { it }.toSet()) == word.toSet())
 
 /**
  * Средняя (4 балла)
@@ -261,7 +260,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
     for (i in list.indices)
         if (repeats.containsKey(list[i])) repeats[list[i]] = repeats.getValue(list[i]) + 1
         else repeats[list[i]] = 1
-    return repeats.filterValues { it > 1 } as MutableMap<String, Int>
+    return repeats.filterValues { it > 1 }
 }
 
 /**
@@ -277,15 +276,15 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   assertTrue(hasAnagrams(listOf("лунь", "нуль")))
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var check = 1
+    var check = false
     for (i in words.indices) {
         for (j in i + 1 until words.size)
-            if (words[i].toSortedSet() == words[j].toSortedSet()) {
-                check = 2
+            if ((words[i].toSortedSet() == words[j].toSortedSet()) && (words[i].length == words[j].length)) {
+                check = true
                 break
             }
     }
-    return check == 2
+    return check
 }
 
 /**
