@@ -78,11 +78,11 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-    if (str.matches(Regex("""\d{1,2} [а-я]{3,8} \d{1,4}"""))) {
+    if (str.matches(Regex("""\d{1,2} [а-я]{3,8} \d+"""))) {
         val parts = str.split(" ")
         var jj = parts[0]
         var mm: String? = parts[1]
-        val yyyy = parts[2]
+        val y = parts[2]
         val months = mapOf<String, String>(
             "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
             "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
@@ -93,10 +93,10 @@ fun dateStrToDigit(str: String): String {
         if (mm in months)
             mm = months[mm]
         else return ""
-        val days = mm?.let { daysInMonth(it.toInt(), yyyy.toInt()) }
-        return if ((jj.toInt() > days!!) || (jj.toInt() < 1) || (yyyy.toInt() < 1))
+        val days = mm?.let { daysInMonth(it.toInt(), y.toInt()) }
+        return if ((jj.toInt() > days!!) || (jj.toInt() < 1) || (y.toInt() < 1))
             ""
-        else String.format("%s.%s.%s", jj, mm, yyyy)
+        else String.format("%s.%s.%s", jj, mm, y)
     } else return ""
 }
 
@@ -261,12 +261,16 @@ fun firstDuplicateIndex(str: String): Int {
     return if (!str.matches(Regex("""(\S+ )+\S+"""))) -1
     else if (parts[0].equals(parts[1], ignoreCase = true)) return 0
     else {
-        while (!parts[i].equals(parts[i + 1], ignoreCase = true)) {
+        while ((!parts[i].equals(parts[i + 1], ignoreCase = true)) && (i + 2 != parts.size)) {
             result += parts[i + 1].length + 1
             check = parts[i + 1]
             i++
         }
-        result - check.length
+        val lCheck = str[result - check.length]
+        val newStr = str.removeRange(result - check.length, result - check.length)
+        if (newStr.contains(lCheck)) result - check.length
+        else -1
+        //assertEquals(-1, firstDuplicateIndex("a i"))
     }
 }
 
@@ -284,14 +288,14 @@ fun firstDuplicateIndex(str: String): Int {
 fun mostExpensive(description: String): String {
     val parts = description.split(" ") as MutableList<String>
     var result = ""
-    return if (!description.matches(Regex("""(\S+ \d+\.\d+; )*\S+ \d+\.\d+"""))) ""
+    return if (!description.matches(Regex("""(\S+ \d+\.\d+; )*\S+ \d+\.*\d*"""))) ""
     else if (parts.size == 2) parts[0]
     else {
         for (i in 1 until parts.size - 2 step 2)
             result = if ((parts[i + 2].dropLast(1)).toDouble() > (parts[i].dropLast(1)).toDouble()) parts[i + 1]
-            else if (parts[i + 2].toDouble() > (parts[i].dropLast(1)).toDouble()) parts[i + 1]
+            else if ((parts[i].dropLast(1)).toDouble() > (parts[i + 2].dropLast(1)).toDouble()) parts[i - 1]
+            else if ((parts[i + 2].dropLast(1)).toDouble() < (parts[i].dropLast(1)).toDouble()) parts[i - 1]
             else parts[i - 1]
-        //"b 7.5; d 5.5; v 1.1"
         result
     }
 }
@@ -307,24 +311,7 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int {
-    val check = listOf<String>("M","C","D","X","L","I","V")
-    val th = listOf("", "M", "MM", "MMM", "MMMM", "MMMMM", "MMMMMM", "MMMMMMM")
-    val hun = listOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
-    val te = listOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
-    val on = listOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
-    var result = 0
-    for (i in roman)
-        if (i.toString() !in check) return -1
-    for (char in roman) {
-        if (char.toString() in th) result += roman.indexOf(char) * 1000
-        else if (char.toString() in hun) result += roman.indexOf(char) * 100
-        else if (char.toString() in te) result += roman.indexOf(char) * 10
-        else if (char.toString() in on) result += roman.indexOf(char)
-    }
-    return result
-}
-//assertEquals(694, fromRoman("DCXCIV"))
+fun fromRoman(roman: String): Int = TODO()
 
 /**
  * Очень сложная (7 баллов)

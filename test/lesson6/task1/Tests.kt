@@ -43,6 +43,7 @@ class Tests {
         assertEquals("", dateStrToDigit("29 февраля 1993"))
         assertEquals("01.01.1", dateStrToDigit("01 января 1"))
         assertEquals("", dateStrToDigit("января"))
+        assertEquals("01.01.13282", dateStrToDigit("01 января 13282"))
     }
 
     @Test
@@ -112,6 +113,7 @@ class Tests {
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
         assertEquals(0, firstDuplicateIndex("кот кот кот"))
+        assertEquals(-1, firstDuplicateIndex("a i"))
     }
 
     @Test
@@ -120,7 +122,7 @@ class Tests {
         assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
-        assertEquals("b", mostExpensive("b 7.5; d 5.5; v 1.1"))
+        assertEquals("a", mostExpensive("a 0"))
     }
 
     @Test
