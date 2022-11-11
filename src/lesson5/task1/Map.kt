@@ -3,6 +3,7 @@
 package lesson5.task1
 
 import lesson4.task1.mean
+import java.lang.Math.max
 
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
@@ -191,16 +192,11 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val result = mutableMapOf<String, Double>()
-    val map = mutableMapOf<String, Int>()
-    for (i in stockPrices.indices)
-        if (!result.containsKey(stockPrices[i].first)) result[stockPrices[i].first] = stockPrices[i].second
-        else {
-            if (map[stockPrices[i].first] == null) map[stockPrices[i].first] = 2
-            else map[stockPrices[i].first] = map.getValue(stockPrices[i].first) + 1
-            result[stockPrices[i].first] =
-                (result.getValue(stockPrices[i].first) + stockPrices[i].second)
-        }
-    for ((key) in map) result[key] = result.getValue(key) / map.getValue(key)
+    val map = mutableMapOf<String, List<Double>>()
+    for ((first, second) in stockPrices)
+        if (first !in map) map[first] = listOf(second)
+        else map[first] = map[first]!! + (second)
+    for ((key, value) in map) result[key] = mean(value)
     return result
 }
 
@@ -219,17 +215,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var compareTo = 20000.0
-    var result: String? = null
-    for ((key, value) in stuff)
-        if (value.first == kind && value.second <= compareTo) {
-            result = key
-            compareTo = value.second
-        } else
-            result = null
-    return result
-}
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
 
 /**
  * Средняя (3 балла)
@@ -368,5 +354,32 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
+    val listOfMass = mutableListOf<Int>()
+    val listOfPrices = mutableListOf<Int>()
+    val listOfTreasures = mutableListOf<String>()
+    val prices = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
+    for ((key, value) in treasures) {
+        listOfPrices.add(value.second)
+        listOfMass.add(value.first)
+        listOfTreasures.add(key)
+    }
+    for (i in 1..treasures.size)
+        for (j in 0..capacity)
+            if (j >= listOfMass[i - 1])
+                prices[i][j] = max(prices[i - 1][j], prices[i - 1][j - listOfMass[i - 1]] + listOfPrices[i - 1])
+            else
+                prices[i][j] = prices[i - 1][j]
+    var temp = capacity
+    var i = treasures.size
+    while (i > 0) {
+        if (prices[i][temp] != prices[i - 1][temp]) {
+            result.add(listOfTreasures[i - 1])
+            temp -= listOfMass[i - 1]
+        }
+        i--
+    }
+    return result
+}
 

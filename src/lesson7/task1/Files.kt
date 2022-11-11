@@ -75,7 +75,19 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val list = substrings.toSet().toList()
+    val txt = File(inputName).readText().toLowerCase()
+    val result = mutableMapOf<String, Int>()
+    for (i in list.indices) {
+        if (!result.contains(list[i]))
+            result[list[i]] = 0
+        for (j in txt.indices)
+            if (txt.startsWith(list[i].toLowerCase(), j))
+                result[list[i]] = result[list[i]]!! + 1
+    }
+    return result
+}
 
 
 /**
@@ -92,8 +104,29 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val specialLetters = listOf('ч', 'ш', 'ж', 'щ')
+    val corrections = mapOf('ю' to 'у', 'ы' to 'и', 'я' to 'а')
+    val output = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        var new = ""
+        var check = ""
+        for (i in line.indices)
+            if (check != "") {
+                check = ""
+            } else {
+                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1))
+                    if (line[i + 1] in corrections.keys)
+                        check = corrections[line[i + 1]].toString()
+                    else if (line[i + 1].toLowerCase() in corrections.keys)
+                        check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
+                new += line[i].toString() + check
+            }
+        output.write(new)
+        output.newLine()
+    }
+    output.close()
 }
+
 
 /**
  * Средняя (15 баллов)

@@ -271,17 +271,12 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val c = convert(n, base)
-    val map = mapOf<Int, String>(
-        10 to "a", 11 to "b", 12 to "c", 13 to "d", 14 to "e", 15 to "f", 16 to "g", 17 to "h", 18 to "i",
-        19 to "j", 20 to "k", 21 to "l", 22 to "m", 23 to "n", 24 to "o", 25 to "p", 26 to "q", 27 to "r", 28 to "s",
-        29 to "t", 30 to "u", 31 to "v", 32 to "w", 33 to "x", 34 to "y", 35 to "z"
-    )
     val result = StringBuilder()
     if (n < 10) return n.toString()
     else {
         for (i in c.indices) {
             if (c[i] in 10..35) {
-                result.append(map[c[i]].toString())
+                result.append((c[i] + 87).toChar().toString())
             } else
                 result.append(c[i].toString())
         }
@@ -322,31 +317,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val alphabet = listOf(
-        "a", "b", "c", "d", "e", "f", "g", "h", "i",
-        "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-        "t", "u", "v", "w", "x", "y", "z"
-    )
-    val map = mapOf<String, Int>(
-        "a" to 10, "b" to 11, "c" to 12, "d" to 13, "e" to 14, "f" to 15, "g" to 16, "h" to 17, "i" to 18,
-        "j" to 19, "k" to 20, "l" to 21, "m" to 22, "n" to 23, "o" to 24, "p" to 25, "q" to 26, "r" to 27, "s" to 28,
-        "t" to 29, "u" to 30, "v" to 31, "w" to 32, "x" to 33, "y" to 34, "z" to 35
-    )
-    val listInt = mutableListOf<Int>()
-    val list1 = mutableListOf<String>()
-    val list2 = mutableListOf<String>()
-    for (element in str)
-        list1.add(element.toString())
-    for (i in 0 until list1.size) {
-        if (alphabet.contains(list1[i].toString()))
-            list2.add(map[list1[i]].toString())
-        else list2.add(list1[i])
+    val list = mutableListOf<Int>()
+    for (i in str.indices) {
+        if (str[i] !in '0'..'9')
+            list.add((str[i] - 87).code)
+        else
+            list.add(str[i] - '0')
     }
-    for (i in list2.indices)
-        listInt.add(list2[i].toInt())
-    return decimal(listInt, base)
+    return if (str.length == 1) list[0] else decimal(list, base)
 }
-
 
 /**
  * Сложная (5 баллов)
@@ -418,51 +397,52 @@ fun russian(n: Int): String {
         700000 to " семьсот тысяч", 800000 to " восемьсот тысяч", 900000 to " девятьсот тысяч"
     )
     val lastThree = hundreds[100 * ((n / 100) % 10)] + tens[10 * (n % 100 / 10)] + ones[n % 10]
+    val countThousands = 1000 * (n / 1000)
+    val countHundreds = 100 * (n / 100 % 10)
+    val countTenTh = 1000 * (n / 1000 % 100)
+    val countTensSp = n % 100
+    val hunTenSp = hundreds[countHundreds] + tensSpecial[countTensSp]
     //
-    while (n < 9999 && n % 100 !in 11..19)
-        return (thousands[1000 * (n / 1000)] + lastThree).removeRange(0, 1)
+    if (n < 9999 && n % 100 !in 11..19)
+        return (thousands[countThousands] + lastThree).removeRange(0, 1)
     // exp: 9843
-    while (n < 9999 && n % 100 in 11..19)
-        return (thousands[1000 * (n / 1000)] + hundreds[100 * ((n / 100) % 10)]
-                + tensSpecial[n % 100]).removeRange(0, 1)
+    else if (n < 9999 && n % 100 in 11..19)
+        return (thousands[countThousands] + hundreds[countHundreds] + tensSpecial[countTensSp]).removeRange(0, 1)
     // exp: 9813
-    while ((n % 100 !in 11..19) && ((n / 1000 % 100) !in 11..19)) {
+    else if ((n % 100 !in 11..19) && ((n / 1000 % 100) !in 11..19)) {
         return if (n / 1000 % 100 == 0) {
-            (hundTh[100000 * (n / 100000)] + tenTh[1000 * (n / 1000 % 100)] + lastThree).removeRange(0, 1)
+            (hundTh[100000 * (n / 100000)] + tenTh[countTenTh] + lastThree).removeRange(0, 1)
             // exp: 900654
         } else if (n / 1000 % 10 == 0) {
-            (hundreds[100 * (n / 100000)] + tenTh[1000 * (n / 1000 % 100)] + lastThree).removeRange(0, 1)
+            (hundreds[100 * (n / 100000)] + tenTh[countTenTh] + lastThree).removeRange(0, 1)
             // exp: 980654
         } else {
-            (hundreds[100 * (n / 100000)] + tens[10 * ((n / 10000) % 10)]
-                    + thousands[1000 * ((n / 1000) % 10)] + lastThree).removeRange(0, 1)
+            (hundreds[100 * (n / 100000)] + tens[10 * ((n / 10000) % 10)] + thousands[1000 * ((n / 1000) % 10)]
+                    + lastThree).removeRange(0, 1)
             // exp: 987654
         }
-    }
-    while ((n % 100 !in 11..19) && ((n / 1000 % 100) in 11..19))
-        return (hundreds[100 * (n / 100000)] + tenThSp[1000 * ((n / 1000) % 100)] + lastThree).removeRange(0, 1)
+    } else if ((n % 100 !in 11..19) && ((n / 1000 % 100) in 11..19))
+        return (hundreds[100 * (n / 100000)] + tenThSp[countTenTh] + lastThree).removeRange(0, 1)
     // exp: 913654
-    while ((n % 100 in 11..19) && ((n / 1000 % 100) !in 11..19))
+    else if ((n % 100 in 11..19) && ((n / 1000 % 100) !in 11..19))
         return if (n / 1000 % 100 == 0) {
-            (hundTh[100000 * (n / 100000)] + tenTh[1000 * ((n / 10000) % 10)]
-                    + thousands[1000 * ((n / 1000) % 10)] + hundreds[100 * (n / 100 % 10)] + tensSpecial[n % 100]).removeRange(0, 1)
+            (hundTh[100000 * (n / 100000)] + tenTh[countTenTh] + thousands[1000 * ((n / 1000) % 10)]
+                    + hunTenSp).removeRange(0, 1)
             // exp: 900613
         } else if (n / 1000 % 10 == 0) {
-            (hundreds[100 * (n / 100000)] + tenTh[1000 * (n / 1000 % 100)]
-                    + hundreds[100 * (n / 100 % 10)] + tensSpecial[n % 100]).removeRange(0, 1)
+            (hundreds[100 * (n / 100000)] + tenTh[countTenTh] + hunTenSp).removeRange(0, 1)
             // exp: 980613
         } else {
             (hundreds[100 * (n / 100000)] + tens[10 * ((n / 10000) % 10)] + thousands[1000 * (n / 1000 % 10)]
-                    + hundreds[100 * (n / 100 % 10)] + tensSpecial[n % 100]).removeRange(0, 1)
+                    + hunTenSp).removeRange(0, 1)
             // exp: 987613
         }
     //
-    while ((n % 100 in 11..19) && ((n / 1000 % 100) in 11..19))
-        return (hundreds[100 * (n / 100000)] + tenThSp[1000 * ((n / 1000) % 100)]
-                + hundreds[100 * (n / 100 % 10)] + tensSpecial[n % 100]).removeRange(0, 1)
+    else if ((n % 100 in 11..19) && ((n / 1000 % 100) in 11..19))
+        return (hundreds[100 * (n / 100000)] + tenThSp[countTenTh] + hunTenSp).removeRange(0, 1)
     // exp: 115511
     //
-    return (hundTh[100000 * (n / 100000)] + tens[10 * ((n / 10000) % 10)]
-            + tenThSp[10000 * ((n / 1000) % 100)] + hundreds[100 * ((n / 100) % 10)]).removeRange(0, 1)
+    else return (hundTh[100000 * (n / 100000)] + tens[10 * ((n / 10000) % 10)] + tenThSp[10000 * ((n / 1000) % 100)]
+            + hundreds[countHundreds]).removeRange(0, 1)
     // exp: 913650
 }
