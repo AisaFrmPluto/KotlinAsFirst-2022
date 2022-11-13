@@ -152,8 +152,7 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String =
     if ((!phone.contains(Regex("""[^\d\s\-+()]"""))) &&
-        phone.matches(Regex("""(\+? *\d[- \d]*(\([-\d ]+\)[-\d ]+)?)""")) &&
-        (phone.replace("[^0-9]".toRegex(), "").length in 5..11)
+        phone.matches(Regex("""(\+?[- \d]*(\([\d+[\s-]*]+\))*[-\d ]*)"""))
     )
         phone.filter { it !in " " && it !in "(" && it !in ")" && it !in "-" }
     else ""
@@ -268,7 +267,8 @@ fun firstDuplicateIndex(str: String): Int {
         }
         val lCheck = str[result - check.length]
         val newStr = str.removeRange(result - check.length, result - check.length)
-        if (newStr.contains(lCheck)) result - check.length
+        if ((newStr.contains(lCheck)) && (parts.size != result - check.length + 1))
+            result - check.length
         else -1
         //assertEquals(-1, firstDuplicateIndex("a i"))
     }
@@ -285,21 +285,7 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String {
-    val parts = description.split(" ") as MutableList<String>
-    var result = ""
-    return if (!description.matches(Regex("""(\S+ \d+\.\d+; )*\S+ \d+\.*\d*"""))) ""
-    else if (parts.size == 2) parts[0]
-    else {
-        for (i in 1 until parts.size - 2 step 2)
-            result = if ((parts[i + 2].dropLast(1)).toDouble() > (parts[i].dropLast(1)).toDouble()) parts[i + 1]
-            else if ((parts[i].dropLast(1)).toDouble() > (parts[i + 2].dropLast(1)).toDouble()) parts[i - 1]
-            else if ((parts[i + 2].dropLast(1)).toDouble() < (parts[i].dropLast(1)).toDouble()) parts[i - 1]
-            else parts[i - 1]
-        result
-    }
-}
-
+fun mostExpensive(description: String): String = TODO()
 /**
  * Сложная (6 баллов)
  *
