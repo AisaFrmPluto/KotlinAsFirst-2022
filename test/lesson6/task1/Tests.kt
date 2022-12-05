@@ -80,6 +80,8 @@ class Tests {
         assertEquals(754, bestLongJump("700 717 707 % 754"))
         assertEquals(-1, bestLongJump("700 + 700"))
         assertEquals(-1, bestLongJump("66%5"))
+        assertEquals(121, bestLongJump("121"))
+        assertEquals(-1, bestLongJump("706-9 5"))
     }
 
     @Test
@@ -89,6 +91,7 @@ class Tests {
         assertEquals(-1, bestHighJump("???"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
         assertEquals(240, bestHighJump("240 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
+        assertEquals(-1, bestHighJump("706-9 +"))
     }
 
     @Test
@@ -113,7 +116,7 @@ class Tests {
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
         assertEquals(0, firstDuplicateIndex("кот кот кот"))
-        assertEquals(-1, firstDuplicateIndex("a i"))
+        assertEquals(-1, firstDuplicateIndex("a i b"))
     }
 
     @Test
@@ -123,6 +126,7 @@ class Tests {
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
         assertEquals("a", mostExpensive("a 0"))
+        assertEquals("d", mostExpensive("d 5.5; v 1.1"))
     }
 
     @Test

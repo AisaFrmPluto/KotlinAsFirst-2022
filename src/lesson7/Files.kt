@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.max
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -93,7 +94,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 /**
  * Средняя (12 баллов)
  *
- * В русском языке, как правило, после букв Ж, Ч, Ш, Щ пишется И, А, У, а не Ы, Я, Ю.
+ * В русском языке, как правило, после букв Ж, Ч, Ш, Щ пишется И, А, У, а н е Ы, Я, Ю.
  * Во входном файле с именем inputName содержится некоторый текст на русском языке.
  * Проверить текст во входном файле на соблюдение данного правила и вывести в выходной
  * файл outputName текст с исправленными ошибками.
@@ -146,7 +147,22 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val output = File(outputName).bufferedWriter()
+    var maxLength = 0
+    for (line in File(inputName).readLines()) {
+        if (line.trim().length > maxLength) maxLength = line.trim().length
+        else continue
+    }
+    for (line in File(inputName).readLines()) {
+        var check = (maxLength - line.trim().length) / 2
+        while (check > 0) {
+            output.write(" ")
+            check--
+        }
+        output.write(line.trim())
+        output.newLine()
+    }
+    output.close()
 }
 
 /**
@@ -177,7 +193,29 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val output = File(outputName).bufferedWriter()
+    var maxLength = 0
+    for (line in File(inputName).readLines()) {
+        line.replace(Regex("""\s+"""), " ")
+        if (line.trim().length > maxLength) maxLength = line.trim().length
+        else continue
+    }
+    for (line in File(inputName).readLines()) {
+        var nOfSpaces = maxLength - line.length
+        val parts = line.trim().split(Regex("""\s""")).toMutableList()
+        var i = 0
+        while (nOfSpaces > 0) {
+            parts[i] += " "
+            if (i < parts.size - 2)
+                i++
+            else
+                i = 0
+            nOfSpaces--
+        }
+        output.write(parts.joinToString(" "))
+        output.newLine()
+    }
+    output.close()
 }
 
 /**

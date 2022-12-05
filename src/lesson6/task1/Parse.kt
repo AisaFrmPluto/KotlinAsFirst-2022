@@ -88,7 +88,7 @@ fun dateStrToDigit(str: String): String {
             "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
             "декабря" to "12"
         )
-        if ((jj.toIntOrNull()!! < 10) && jj.length == 1)
+        if ((jj.toInt() < 10) && jj.length == 1)
             jj = "0$jj"
         if (mm in months)
             mm = months[mm]
@@ -116,19 +116,15 @@ fun dateDigitToStr(digital: String): String {
         var jj = parts[0]
         var mm: String = parts[1]
         val yyyy = parts[2]
-        val months = listOf<Pair<String, String>>(
-            "01" to "января", "02" to "февраля", "03" to "марта", "04" to "апреля",
-            "05" to "мая", "06" to "июня", "07" to "июля", "08" to "августа", "09" to "сентября",
-            "10" to "октября", "11" to "ноября", "12" to "декабря"
+        val months = listOf<String>(
+            "января", "февраля", "марта", "апреля",
+            "мая", "июня", "июля", "августа", "сентября",
+            "октября", "ноября", "декабря"
         )
         if (jj.toInt() < 10)
             jj = jj.toInt().toString()
-        for (i in months.indices) {
-            if (mm == months[i].first) {
-                mm = months[i].second
-                break
-            } else continue
-        }
+        if (mm.toInt() in 1..12) mm = months[mm.toInt() - 1]
+        else return ""
         val days = daysInMonth(parts[1].toInt(), yyyy.toInt())
         return if ((jj.toInt() > days) || (jj.toInt() < 1) || (yyyy.toInt() < 1) || (mm == parts[1]))
             ""
@@ -151,8 +147,8 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String =
-    if ((!phone.contains(Regex("""[^\d\s\-+()]"""))) &&
-        phone.matches(Regex("""(\+?[- \d]*(\([\d+[\s-]*]+\))*[-\d ]*)"""))
+    if ((!phone.contains(Regex("""[^\d\s\-+\d()]"""))) &&
+        phone.matches(Regex("""((\+\d+)?[- \d]*(\d+)*(\([\d+[\s-]*]+\))*[-\d ]*)"""))
     )
         phone.filter { it !in " " && it !in "(" && it !in ")" && it !in "-" }
     else ""
@@ -171,8 +167,9 @@ fun bestLongJump(jumps: String): Int {
     val parts = jumps.split(" ")
     val list = mutableListOf<Int>()
     return if (jumps.contains(Regex("""[^\d\s\-%]""")) ||
-        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s"""))
-    ) -1
+        jumps.contains(Regex("""([%\-])(%|-|\d)|(%|-|\d)([%\-])""")) || !jumps.contains(Regex("""\d"""))
+    )
+        -1
     else {
         for (part in parts) {
             if (part != "-" && part != "%")
@@ -198,7 +195,8 @@ fun bestHighJump(jumps: String): Int {
     val parts = jumps.split(" ") as MutableList<String>
     val list = mutableListOf<String>()
     return if (jumps.contains(Regex("""[^\d\s\-%+]""")) ||
-        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s"""))
+        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s""")) ||
+        !jumps.matches(Regex("""[\d\+\s[%\*-\*+\*]][\s\d\+\s[%\*-\*+\*]]*"""))
     ) -1
     else {
         for (i in 0 until parts.size - 1 step 2) {
@@ -252,7 +250,22 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ") as MutableList<String>
+    var result = parts[0].length
+    var i = 0
+    var check = ""
+    return if (!str.matches(Regex("""(\S+ )+\S+"""))) -1
+    else if (parts[0] == parts[1]) 0
+    else {
+        while (parts[i].toUpperCase() != parts[i + 1].toUpperCase()) {
+            result += parts[i + 1].length + 1
+            check = parts[i + 1]
+            i++
+        }
+        result - check.length
+    }
+}
 
 /**
  * Сложная (6 баллов)
@@ -265,7 +278,20 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val parts = description.split(" ") as MutableList<String>
+    var result = ""
+    return if (!description.matches(Regex("""(\S+ \d+\.?\d*; )*\S+ \d+\.?\d*"""))) ""
+    else if (parts.size == 2) parts[0]
+    else {
+        for (i in 1 until parts.size - 2 step 2) {
+            result = if ((parts[i + 2].dropLast(1)).toDouble() > (parts[i].dropLast(1)).toDouble()) parts[i + 1]
+            else parts[i - 1]
+        }
+        result
+    }
+}
+
 /**
  * Сложная (6 баллов)
  *

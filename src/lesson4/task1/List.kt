@@ -276,7 +276,7 @@ fun convertToString(n: Int, base: Int): String {
     else {
         for (i in c.indices) {
             if (c[i] in 10..35) {
-                result.append((c[i] + 87).toChar().toString())
+                result.append((c[i] + 'a'.code - 10).toChar().toString())
             } else
                 result.append(c[i].toString())
         }
@@ -320,7 +320,7 @@ fun decimalFromString(str: String, base: Int): Int {
     val list = mutableListOf<Int>()
     for (i in str.indices) {
         if (str[i] !in '0'..'9')
-            list.add((str[i] - 87).code)
+            list.add((str[i] - 'a'.code - 10).code)
         else
             list.add(str[i] - '0')
     }
