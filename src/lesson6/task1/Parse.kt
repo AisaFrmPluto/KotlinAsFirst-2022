@@ -257,10 +257,11 @@ fun firstDuplicateIndex(str: String): Int {
     var i = 0
     var check = ""
     if (!str.matches(Regex("""(\S+ )+\S+"""))) return -1
+    else if (parts[0].equals(parts[1], ignoreCase = true)) return 0
     else if (parts[0] == parts[1]) return 0
     else {
         while (i + 1 < parts.size) {
-            if (parts[i].toUpperCase() != parts[i + 1].toUpperCase()) {
+            if (!parts[i].equals(parts[i + 1], ignoreCase = true)) {
                 result += parts[i + 1].length + 1
                 check = parts[i + 1]
                 i++
@@ -283,16 +284,19 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    val parts = description.split(" ") as MutableList<String>
+    val des = "$description;"
+    val parts = des.split(" ") as MutableList<String>
     var result = ""
     return if (!description.matches(Regex("""(\S+ \d+\.?\d*; )*\S+ \d+\.?\d*"""))) ""
     else if (parts.size == 2) parts[0]
     else {
+        val p1 = parts[1].dropLast(1).toDouble()
         for (i in 1 until parts.size - 2 step 2) {
             result = if ((parts[i + 2].dropLast(1)).toDouble() > (parts[i].dropLast(1)).toDouble()) parts[i + 1]
+            else if ((parts[i + 2].dropLast(1)).toDouble() == (parts[i].dropLast(1)).toDouble()) "Any good with price $p1"
             else parts[i - 1]
         }
-        result
+        return result
     }
 }
 
