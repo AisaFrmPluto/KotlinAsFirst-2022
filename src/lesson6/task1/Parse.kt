@@ -194,9 +194,10 @@ fun bestHighJump(jumps: String): Int {
     var result = -1
     val parts = jumps.split(" ") as MutableList<String>
     val list = mutableListOf<String>()
-    return if (jumps.contains(Regex("""[^\d\s\-%+]""")) ||
-        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s""")) ||
-        !jumps.matches(Regex("""[\d\+\s[%\*-\*+\*]][\s\d\+\s[%\*-\*+\*]]*"""))
+    return if (!jumps.matches(Regex("""[\d\+\s[%\*+\*\-\*]][\s\d\+\s[%\*\-\*+\*]]*""")) ||
+        jumps.contains(Regex("""[^\d\s\-%+]""")) ||
+        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s"""))
+    //"706-9 +"
     ) -1
     else {
         for (i in 0 until parts.size - 1 step 2) {
@@ -255,16 +256,19 @@ fun firstDuplicateIndex(str: String): Int {
     var result = parts[0].length
     var i = 0
     var check = ""
-    return if (!str.matches(Regex("""(\S+ )+\S+"""))) -1
-    else if (parts[0] == parts[1]) 0
+    if (!str.matches(Regex("""(\S+ )+\S+"""))) return -1
+    else if (parts[0] == parts[1]) return 0
     else {
-        while (parts[i].toUpperCase() != parts[i + 1].toUpperCase()) {
-            result += parts[i + 1].length + 1
-            check = parts[i + 1]
-            i++
+        while (i + 1 < parts.size) {
+            if (parts[i].toUpperCase() != parts[i + 1].toUpperCase()) {
+                result += parts[i + 1].length + 1
+                check = parts[i + 1]
+                i++
+            } else break
         }
-        result - check.length
     }
+    return if (result - check.length != str.length - 1) result - check.length
+    else -1
 }
 
 /**

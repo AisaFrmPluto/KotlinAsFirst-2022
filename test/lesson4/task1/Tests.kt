@@ -218,6 +218,7 @@ class Tests {
         assertEquals(250, decimalFromString("13c", 14))
         assertEquals(1000, decimalFromString("2ec", 19))
         assertEquals(35, decimalFromString("z", 36))
+        assertEquals(446582166, decimalFromString("20a0a1878", 11))
         assertEquals(Int.MAX_VALUE, decimalFromString("a02220281", 11))
     }
 

@@ -196,28 +196,33 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val output = File(outputName).bufferedWriter()
     var maxLength = 0
     for (line in File(inputName).readLines()) {
-        line.replace(Regex("""\s+"""), " ")
-        if (line.trim().length > maxLength) maxLength = line.trim().length
-        else continue
+        if (line.trim().length > maxLength)
+            maxLength = line.trim().length
     }
     for (line in File(inputName).readLines()) {
-        var nOfSpaces = maxLength - line.length
         val parts = line.trim().split(Regex("""\s""")).toMutableList()
-        var i = 0
-        while (nOfSpaces > 0) {
-            parts[i] += " "
-            if (i < parts.size - 2)
-                i++
-            else
-                i = 0
-            nOfSpaces--
+        if (parts.size == 1) {
+            output.write(line.trim())
+            output.newLine()
+        } else if (line == "")
+            output.newLine()
+        else {
+            var nOfSpaces = maxLength - line.trim().length
+            var i = 0
+            while (nOfSpaces > 0) {
+                parts[i] += " "
+                if (i < parts.size - 2)
+                    i++
+                else
+                    i = 0
+                nOfSpaces--
+            }
+            output.write(parts.joinToString(" "))
+            output.newLine()
         }
-        output.write(parts.joinToString(" "))
-        output.newLine()
     }
     output.close()
 }
-
 /**
  * Средняя (14 баллов)
  *
