@@ -392,7 +392,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         counter--
     }
-    if (result.size != 1 && result.isNotEmpty()) result -= result[0]
+    var sum = 0
+    for (k in 0 until result.size) {
+        sum += treasures[result[k]]!!.first
+    }
+    if (result.size != 1 && result.isNotEmpty() && sum > capacity) result -= result[0]
     return result.toSet()
 }
 
