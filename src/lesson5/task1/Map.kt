@@ -372,7 +372,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     //if I have to have numbers to deal with inside this list https://www.techiedelight.com/create-a-list-of-fixed-size-in-kotlin/
     var check = capacity
     var counter = treasures.size
-    val result = mutableSetOf<String>()
+    val result = mutableListOf<String>()
     for ((key, value) in treasures) {
         valueOfTr.add(value.second)
         weightOfTr.add(value.first)
@@ -388,10 +388,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     while (counter > 0) {
         if (prices[counter][check] != prices[counter - 1][check]) {
             result.add(kindOfTr[counter - 1])
-            check -= weightOfTr[counter - 1]
+            check -= weightOfTr[counter - 1] - 2
         }
         counter--
     }
-    return result
+    if (result.size != 1 && result.isNotEmpty()) result -= result[0]
+    return result.toSet()
 }
 
