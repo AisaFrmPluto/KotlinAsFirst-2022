@@ -275,7 +275,7 @@ fun convertToString(n: Int, base: Int): String {
     if (n < 10) return n.toString()
     else {
         for (i in c.indices) {
-            if (c[i] in 10..35) {
+            if (c[i] in 10..35) { //10 + 26 - 1 = 35 : because of the alphabet number from a to z - 1
                 result.append((c[i] + 'a'.code - 10).toChar().toString())
             } else
                 result.append(c[i].toString())

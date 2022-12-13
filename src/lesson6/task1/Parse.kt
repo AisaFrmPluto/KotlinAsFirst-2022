@@ -77,6 +77,22 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+fun conditionForDate(str: String): Boolean {
+    val months = mapOf<String, String>(
+        "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
+        "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
+        "декабря" to "12"
+    )
+    var parts = str.split(" ")
+    if ("." in str) parts = str.split(".")
+    val jj = parts[0]
+    val mm = parts[1]
+    val yyyy = parts[2]
+    val days: Int
+    if (mm.toInt() in 1..12) days = daysInMonth(parts[1].toInt(), yyyy.toInt())
+    else days = months[mm]?.let { daysInMonth(it.toInt(), yyyy.toInt()) }!!
+    return (jj.toInt() > days) || (jj.toInt() < 1) || (yyyy.toInt() < 1)
+}
 fun dateStrToDigit(str: String): String {
     if (str.matches(Regex("""\d{1,2} [а-я]{3,8} \d+"""))) {
         val parts = str.split(" ")
@@ -126,7 +142,7 @@ fun dateDigitToStr(digital: String): String {
         if (mm.toInt() in 1..12) mm = months[mm.toInt() - 1]
         else return ""
         val days = daysInMonth(parts[1].toInt(), yyyy.toInt())
-        return if ((jj.toInt() > days) || (jj.toInt() < 1) || (yyyy.toInt() < 1) || (mm == parts[1]))
+        return if (conditionForDate(digital) || (mm in digital))
             ""
         else String.format("%s %s %s", jj, mm, yyyy)
     } else return ""
@@ -194,10 +210,10 @@ fun bestHighJump(jumps: String): Int {
     var result = -1
     val parts = jumps.split(" ") as MutableList<String>
     val list = mutableListOf<String>()
-    return if (!jumps.matches(Regex("""[\d\+\s[%\*+\*\-\*]][\s\d\+\s[%\*\-\*+\*]]*""")) ||
+    return if (
         jumps.contains(Regex("""[^\d\s\-%+]""")) ||
-        !jumps.contains(Regex("""\d""")) || !jumps.contains(Regex("""\s"""))
-    //"706-9 +"
+        jumps.contains(Regex("""(([%\-+])(\d))""")) ||
+        jumps.contains(Regex("""((\d)([%\-+]))"""))
     ) -1
     else {
         for (i in 0 until parts.size - 1 step 2) {
@@ -287,7 +303,9 @@ fun mostExpensive(description: String): String {
     val des = "$description;"
     val parts = des.split(" ") as MutableList<String>
     var result = ""
-    return if (!description.matches(Regex("""(\S+ \d+\.?\d*; )*\S+ \d+\.?\d*"""))) ""
+    return if (!description.matches(Regex("""(\S+ \d+\.?\d*; )*\S+ \d+\.\d+""")) &&
+        !description.matches(Regex("""(\S+ \d+\.?\d*; )*\S+ \d+"""))
+    ) ""
     else if (parts.size == 2) parts[0]
     else {
         val p1 = parts[1].dropLast(1).toDouble()

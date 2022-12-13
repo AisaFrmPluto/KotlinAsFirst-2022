@@ -77,15 +77,15 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    val list = substrings.toList()
+    val list = substrings.toSet().toList()
     val txt = File(inputName).readText().toLowerCase()
     val result = mutableMapOf<String, Int>()
-    for (el in list) {
-        if (!result.contains(el))
-            result[el] = 0
+    for (i in list.indices) {
+        if (!result.contains(list[i]))
+            result[list[i]] = 0
         for (j in txt.indices)
-            if (txt.startsWith(el.toLowerCase(), j))
-                el.windowed(size = txt.length, step = 1)
+            if (txt.startsWith(list[i].toLowerCase(), j))
+                result[list[i]] = result[list[i]]!! + 1
     }
     return result
 }
@@ -146,13 +146,18 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
-fun centerFile(inputName: String, outputName: String) {
-    val output = File(outputName).bufferedWriter()
+fun max(inputName: String, outputName: String): Int {
     var maxLength = 0
     for (line in File(inputName).readLines()) {
         if (line.trim().length > maxLength) maxLength = line.trim().length
         else continue
     }
+    return maxLength
+}
+
+fun centerFile(inputName: String, outputName: String) {
+    val output = File(outputName).bufferedWriter()
+    val maxLength = max(inputName, outputName)
     for (line in File(inputName).readLines()) {
         var check = (maxLength - line.trim().length) / 2
         while (check > 0) {
@@ -184,7 +189,7 @@ fun centerFile(inputName: String, outputName: String) {
  * Равномерность определяется следующими формальными правилами:
  * 5) Число пробелов между каждыми двумя парами соседних слов не должно отличаться более, чем на 1.
  * 6) Число пробелов между более левой парой соседних слов должно быть больше или равно числу пробелов
- *    между более правой парой соседних слов.
+ *    между более правой парой соседних слов.8
  *
  * Следует учесть, что входной файл может содержать последовательности из нескольких пробелов  между слвоами. Такие
  * последовательности следует учитывать при выравнивании и при необходимости избавляться от лишних пробелов.
@@ -194,20 +199,17 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val output = File(outputName).bufferedWriter()
-    var maxLength = 0
+    val maxLength = max(inputName, outputName)
     for (line in File(inputName).readLines()) {
-        if (line.trim().length > maxLength)
-            maxLength = line.trim().length
-    }
-    for (line in File(inputName).readLines()) {
-        val parts = line.trim().split(Regex("""\s""")).toMutableList()
+        val l = line.trim()
+        val parts = l.split(Regex("""\s""")).toMutableList()
         if (parts.size == 1) {
-            output.write(line.trim())
+            output.write(l)
             output.newLine()
         } else if (line == "")
             output.newLine()
         else {
-            var nOfSpaces = maxLength - line.trim().length
+            var nOfSpaces = maxLength - l.length
             var i = 0
             while (nOfSpaces > 0) {
                 parts[i] += " "
