@@ -118,6 +118,10 @@ class Tests {
         assertEquals(0, firstDuplicateIndex("кот кот кот"))
         assertEquals(-1, firstDuplicateIndex("a i b"))
         assertEquals(0, firstDuplicateIndex("M m a a a a l m a a a a l"))
+        assertEquals(
+            0,
+            firstDuplicateIndex("e E a a a a a a a a a a a a a a a a a a a a a a a a a a a a e E a a a a a a a a a a a a a a a a a a a a a a a a a a a a")
+        )
     }
 
     @Test
