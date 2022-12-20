@@ -144,23 +144,11 @@ fun sibilants(inputName: String, outputName: String) {
  * 4) Число строк в выходном файле должно быть равно числу строк во входном (в т. ч. пустых)
  *
  */
-fun max(inputName: String, outputName: String): Int {
+fun centerFile(inputName: String, outputName: String) {
+    val output = File(outputName).bufferedWriter()
     var maxLength = 0
     for (line in File(inputName).readLines())
         if (line.trim().length > maxLength) maxLength = line.trim().length
-    return maxLength
-}
-fun max2(inputName: String, outputName: String): Int {
-    var maxLength = 0
-    for (line in File(inputName).readLines()){
-        val now = Regex("""\s{2,}""").replace(line.trim(), " ").length
-        if (now > maxLength) maxLength = now
-    }
-    return maxLength
-}
-fun centerFile(inputName: String, outputName: String) {
-    val output = File(outputName).bufferedWriter()
-    val maxLength = max(inputName, outputName)
     for (line in File(inputName).readLines()) {
         var check = (maxLength - line.trim().length) / 2
         while (check > 0) {
@@ -200,26 +188,32 @@ fun centerFile(inputName: String, outputName: String) {
  * 7) В самой длинной строке каждая пара соседних слов должна быть отделена В ТОЧНОСТИ одним пробелом
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
+
 fun alignFileByWidth(inputName: String, outputName: String) {
     val output = File(outputName).bufferedWriter()
-    val maxLength = max2(inputName, outputName)
+    var maxLength = 0
+    for (line in File(inputName).readLines()) {
+        val now = Regex("\\s{2,}").replace(line.trim(), " ").length
+        if (now > maxLength) maxLength = now
+    }
     for (line in File(inputName).readLines()) {
         val l = line.trim()
-        val parts = l.split(Regex("""\s""")).toMutableList()
+        val parts = l.split(Regex("\\s")).toMutableList()
         if (parts.size == 1) {
             output.write(l)
             output.newLine()
-        } else if (line == "")
+        } else if (line == "") {
             output.newLine()
-        else {
+        } else {
             var nOfSpaces = maxLength - l.length
             var i = 0
             while (nOfSpaces > 0) {
                 parts[i] += " "
-                if (i < parts.size - 2)
+                if (i < parts.size - 2) {
                     i++
-                else
+                } else {
                     i = 0
+                }
                 nOfSpaces--
             }
             output.write(parts.joinToString(" "))
@@ -228,6 +222,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     }
     output.close()
 }
+
 /**
  * Средняя (14 баллов)
  *
