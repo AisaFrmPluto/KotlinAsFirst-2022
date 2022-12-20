@@ -106,24 +106,25 @@ fun sibilants(inputName: String, outputName: String) {
     val specialLetters = listOf('ч', 'ш', 'ж', 'щ')
     val corrections = mapOf('ю' to 'у', 'ы' to 'и', 'я' to 'а')
     val output = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
-        var new = ""
-        var check = ""
-        for (i in line.indices)
-            if (check != "") {
-                check = ""
-            } else {
-                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1))
-                    if (line[i + 1] in corrections.keys)
-                        check = corrections[line[i + 1]].toString()
-                    else if (line[i + 1].toLowerCase() in corrections.keys)
-                        check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
-                new += line[i].toString() + check
-            }
-        output.write(new)
-        output.newLine()
+    output.use {
+        for (line in File(inputName).readLines()) {
+            var new = ""
+            var check = ""
+            for (i in line.indices)
+                if (check != "") {
+                    check = ""
+                } else {
+                    if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1))
+                        if (line[i + 1] in corrections.keys)
+                            check = corrections[line[i + 1]].toString()
+                        else if (line[i + 1].toLowerCase() in corrections.keys)
+                            check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
+                    new += line[i].toString() + check
+                }
+            it.write(new)
+            it.newLine()
+        }
     }
-    output.close()
 }
 
 

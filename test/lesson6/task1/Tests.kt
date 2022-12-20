@@ -137,6 +137,7 @@ class Tests {
         assertEquals("d", mostExpensive("d 5.5; v 1.1"))
         assertEquals("Any good with price 0.0", mostExpensive("a 0; a 0"))
         assertEquals("Any good with price 0.01", mostExpensive("a 0.01; a 0.01"))
+        assertEquals("Хлеб", mostExpensive("Хлеб 999; Молоко 62; Курица 184.0"))
     }
 
     @Test
@@ -171,28 +172,5 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
-    }
-
-    fun freePlaces() {
-        assertEquals(
-            mutableMapOf("Вася" to arrayOf(1, 2), "Петя" to mutableListOf(1)), freePlaces(
-                mutableListOf(
-                    mutableListOf(true, false, false, false, true, true),
-                    mutableListOf(true, false, true, false)
-                ), mapOf(
-                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
-                )
-            )
-        )
-        assertThrows(IllegalStateException::class.java) {
-            freePlaces(
-                mutableListOf(
-                    mutableListOf(true, true, true, true, true, true),
-                    mutableListOf(true, false, true, false)
-                ), mapOf(
-                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
-                )
-            )
-        }
     }
 }

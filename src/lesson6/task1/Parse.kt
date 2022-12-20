@@ -175,12 +175,11 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String =
-    if ((!phone.contains(Regex("""[^\d\s\-+\d()]"""))) &&
-        phone.matches(Regex("""(\+?[\d\- ])*(\([\d\- ]+\))?[\d\- ]*"""))
-    )
-        phone.filter { it !in " " && it !in "(" && it !in ")" && it !in "-" }
-    else ""
+fun flattenPhoneNumber(phone: String): String {
+    if (phone.matches(Regex("""[^\d\s\-+\d()]"""))) return ""
+    if (!phone.matches(Regex("""(\+?[\d\- ])*(\([\d\- ]+\))?[\d\- ]*"""))) return ""
+    return phone.filter { it !in " " && it !in "(" && it !in ")" && it !in "-" }
+}
 
 /**
  * Средняя (5 баллов)
@@ -282,30 +281,15 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    var word1 = ""
-    var word2 = ""
-    val parts = str.split(" ") as MutableList<String>
-    var result = parts[0].length
-    var i = 0
-    var check = ""
-    if (!str.matches(Regex("""(\S+ )+\S+"""))) return -1
-    else if (parts[0].equals(parts[1], ignoreCase = true)) return 0
-    else if (parts[0] == parts[1]) return 0
-    else {
-        while (i + 1 < parts.size) {
-            if (!parts[i].equals(parts[i + 1], ignoreCase = true)) {
-                result += parts[i + 1].length + 1
-                check = parts[i + 1]
-                i++
-            } else {
-                word1 = parts[i]
-                word2 = parts[i + 1]
-                break
-            }
+    val parts = str.split(" ")
+    var result = 0
+    for (i in parts.indices) {
+        if (i + 1 < parts.size && parts[i].equals(parts[i + 1], ignoreCase = true)) {
+            return result
         }
+        result += parts[i].length + 1
     }
-    return if ((result - check.length != str.length - 1) && (word1.equals(word2, ignoreCase = true))) result - check.length
-    else -1
+    return -1
 }
 
 /**
@@ -392,31 +376,43 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TO
 /**
  * тест на автомат
  */
-fun freePlaces(places: MutableList<MutableList<Boolean>>, requests: Map<String, Pair<Int, Int>>): MutableMap<String, Array<Int>> {
+fun freePlaces(
+    places: MutableList<MutableList<Boolean>>,
+    requests: Map<String, Pair<Int, Int>>
+): MutableMap<String, Array<Int>> {
     val changedPlaces = mutableListOf<MutableList<Boolean>>()
     val peopleAndPlaces = mutableMapOf<String, Array<Int>>()
-    var reservedPlaces = arrayOf<Int>()
-    var check = 0
     for ((key, value) in requests) {
-        for (j in 0 until places[value.first].size) {
-            if (!places[value.first][j]) check++
-        }
-        if ((key.matches(Regex("""\w+"""))) && (value.second < check)) {
-            for (i in 0 until places[value.first].size) {
-                var neededPlaces = value.second
-                while (neededPlaces > 0) {
-                    if (places[value.first][i]) {
-                        changedPlaces[i] += (true)
-                    } else {
-                        changedPlaces[i] += (true)
-                        reservedPlaces += i
-                        neededPlaces--
+        if (key.matches(Regex("""\w+"""))) {
+            var reservedPlaces = arrayOf<Int>()
+            var check = 0
+            for (j in 0 until places[value.first].size) {
+                if (!places[value.first][j]) check++
+            }
+            if (value.second < check) {
+                for (i in 0 until places[value.first].size) {
+                    var neededPlaces = value.second
+                    while (neededPlaces > 0) {
+                        if (places[value.first][i]) {
+                            changedPlaces[i] += (true)
+                        } else {
+                            changedPlaces[i] += (true)
+                            reservedPlaces += i
+                            neededPlaces--
+                        }
                     }
                 }
+                peopleAndPlaces[key] = reservedPlaces
+            } else {
+                throw IllegalStateException()
             }
-            peopleAndPlaces[key] = reservedPlaces
-        } else throw IllegalStateException()
+        } else {
+            throw IllegalStateException()
+        }
     }
     return peopleAndPlaces
 }
+
+
+
 
