@@ -113,20 +113,17 @@ fun sibilants(inputName: String, outputName: String) {
             if (check != "") {
                 check = ""
             } else {
-                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1)) {
+                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1))
                     if (line[i + 1] in corrections.keys)
                         check = corrections[line[i + 1]].toString()
-                    else {
-                        if (line[i + 1].toLowerCase() in corrections.keys)
-                            check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
-                    }
-                    new += line[i].toString() + check
-                }
-                output.write(new)
-                output.newLine()
+                    else if (line[i + 1].toLowerCase() in corrections.keys)
+                        check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
+                new += line[i].toString() + check
             }
-        output.close()
+        output.write(new)
+        output.newLine()
     }
+    output.close()
 }
 
 
@@ -149,13 +146,18 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun max(inputName: String, outputName: String): Int {
     var maxLength = 0
+    for (line in File(inputName).readLines())
+        if (line.trim().length > maxLength) maxLength = line.trim().length
+    return maxLength
+}
+fun max2(inputName: String, outputName: String): Int {
+    var maxLength = 0
     for (line in File(inputName).readLines()){
         val now = Regex("""\s{2,}""").replace(line.trim(), " ").length
         if (now > maxLength) maxLength = now
     }
     return maxLength
 }
-
 fun centerFile(inputName: String, outputName: String) {
     val output = File(outputName).bufferedWriter()
     val maxLength = max(inputName, outputName)
@@ -200,7 +202,7 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val output = File(outputName).bufferedWriter()
-    val maxLength = max(inputName, outputName)
+    val maxLength = max2(inputName, outputName)
     for (line in File(inputName).readLines()) {
         val l = line.trim()
         val parts = l.split(Regex("""\s""")).toMutableList()
