@@ -113,17 +113,20 @@ fun sibilants(inputName: String, outputName: String) {
             if (check != "") {
                 check = ""
             } else {
-                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1))
+                if ((line[i].toLowerCase() in specialLetters) && (i != line.length - 1)) {
                     if (line[i + 1] in corrections.keys)
                         check = corrections[line[i + 1]].toString()
-                    else if (line[i + 1].toLowerCase() in corrections.keys)
-                        check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
-                new += line[i].toString() + check
+                    else {
+                        if (line[i + 1].toLowerCase() in corrections.keys)
+                            check = corrections[line[i + 1].toLowerCase()].toString().toUpperCase()
+                    }
+                    new += line[i].toString() + check
+                }
+                output.write(new)
+                output.newLine()
             }
-        output.write(new)
-        output.newLine()
+        output.close()
     }
-    output.close()
 }
 
 
@@ -146,8 +149,10 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun max(inputName: String, outputName: String): Int {
     var maxLength = 0
-    for (line in File(inputName).readLines())
-        if (line.trim().length > maxLength) maxLength = line.trim().length
+    for (line in File(inputName).readLines()){
+        val now = Regex("""\s{2,}""").replace(line.trim(), " ").length
+        if (now > maxLength) maxLength = now
+    }
     return maxLength
 }
 

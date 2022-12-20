@@ -218,7 +218,7 @@ fun factorize(n: Int): List<Int> {
     else {
         while (n1 > 1) {
             while (n1 % i == 0) {
-                list.add(i)
+                list += i
                 n1 /= i
             }
             i++

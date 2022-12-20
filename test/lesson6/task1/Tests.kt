@@ -92,6 +92,8 @@ class Tests {
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
         assertEquals(240, bestHighJump("240 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
         assertEquals(-1, bestHighJump("706-9 +"))
+        assertEquals(-1, bestHighJump("456 + 25 78 569 +"))
+        assertEquals(-1, bestHighJump("+ + + 78 569 +"))
     }
 
     @Test
@@ -118,6 +120,7 @@ class Tests {
         assertEquals(0, firstDuplicateIndex("кот кот кот"))
         assertEquals(-1, firstDuplicateIndex("a i b"))
         assertEquals(0, firstDuplicateIndex("M m a a a a l m a a a a l"))
+        assertEquals(-1, firstDuplicateIndex("Хлеб хром"))
         assertEquals(
             0,
             firstDuplicateIndex("e E a a a a a a a a a a a a a a a a a a a a a a a a a a a a e E a a a a a a a a a a a a a a a a a a a a a a a a a a a a")

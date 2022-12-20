@@ -226,7 +226,8 @@ fun bestHighJump(jumps: String): Int {
     return if (
         jumps.contains(Regex("""[^\d\s\-%+]""")) ||
         jumps.contains(Regex("""(([%\-+])(\d))""")) ||
-        jumps.contains(Regex("""((\d)([%\-+]))"""))
+        jumps.contains(Regex("""((\d)([%\-+]))""")) ||
+        !jumps.matches(Regex("""\d+ [-%+]+( \d+ [-%+]+)*"""))
     ) -1
     else {
         for (i in 0 until parts.size - 1 step 2) {
@@ -281,6 +282,8 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
+    var word1 = ""
+    var word2 = ""
     val parts = str.split(" ") as MutableList<String>
     var result = parts[0].length
     var i = 0
@@ -294,10 +297,14 @@ fun firstDuplicateIndex(str: String): Int {
                 result += parts[i + 1].length + 1
                 check = parts[i + 1]
                 i++
-            } else break
+            } else {
+                word1 = parts[i]
+                word2 = parts[i + 1]
+                break
+            }
         }
     }
-    return if (result - check.length != str.length - 1) result - check.length
+    return if ((result - check.length != str.length - 1) && (word1.equals(word2, ignoreCase = true))) result - check.length
     else -1
 }
 
