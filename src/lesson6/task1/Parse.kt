@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import kotlin.math.exp
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -78,11 +77,6 @@ fun main() {
  * входными данными.
  */
 fun conditionForDate(str: String): Boolean {
-    val months = mapOf<String, String>(
-        "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
-        "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
-        "декабря" to "12"
-    )
     var parts = str.split(" ")
     if ("." in str) parts = str.split(".")
     val jj = parts[0]
@@ -90,14 +84,33 @@ fun conditionForDate(str: String): Boolean {
     val yyyy = parts[2]
     val days: Int
     if (mm.toInt() in 1..12) days = daysInMonth(parts[1].toInt(), yyyy.toInt())
-    else days = months[mm]?.let { daysInMonth(it.toInt(), yyyy.toInt()) }!!
+    else {
+        val months = mapOf<String, String>(
+            "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
+            "июля" to "07", "августа" to "08", "сентября" to "09", "октября" to "10", "ноября" to "11",
+            "декабря" to "12"
+        )
+        days = months[mm]?.let { daysInMonth(it.toInt(), yyyy.toInt()) }!!
+    }
     return (jj.toInt() > days) || (jj.toInt() < 1) || (yyyy.toInt() < 1)
 }
+
+/**
+ * Средняя (4 балла)
+ *
+ * Дата представлена строкой вида "15 июля 2016".
+ * Перевести её в цифровой формат "15.07.2016".
+ * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
+ * При неверном формате входной строки вернуть пустую строку.
+ *
+ * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
+ * входными данными.
+ */
 fun dateStrToDigit(str: String): String {
     if (str.matches(Regex("""\d{1,2} [а-я]{3,8} \d+"""))) {
         val parts = str.split(" ")
         var jj = parts[0]
-        var mm: String? = parts[1]
+        var mm: String = parts[1]
         val y = parts[2]
         val months = mapOf<String, String>(
             "января" to "01", "февраля" to "02", "марта" to "03", "апреля" to "04", "мая" to "05", "июня" to "06",
@@ -107,10 +120,10 @@ fun dateStrToDigit(str: String): String {
         if ((jj.toInt() < 10) && jj.length == 1)
             jj = "0$jj"
         if (mm in months)
-            mm = months[mm]
+            mm = months[mm].toString()
         else return ""
-        val days = mm?.let { daysInMonth(it.toInt(), y.toInt()) }
-        return if ((jj.toInt() > days!!) || (jj.toInt() < 1) || (y.toInt() < 1))
+        val days = daysInMonth(mm.toInt(), y.toInt())
+        return if ((jj.toInt() > days) || (jj.toInt() < 1) || (y.toInt() < 1))
             ""
         else String.format("%s.%s.%s", jj, mm, y)
     } else return ""
@@ -164,7 +177,7 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String =
     if ((!phone.contains(Regex("""[^\d\s\-+\d()]"""))) &&
-        phone.matches(Regex("""((\+\d+)?[- \d]*(\d+)*(\([\d+[\s-]*]+\))*[-\d ]*)"""))
+        phone.matches(Regex("""(\+?[\d\- ])*(\([\d\- ]+\))?[\d\- ]*"""))
     )
         phone.filter { it !in " " && it !in "(" && it !in ")" && it !in "-" }
     else ""
@@ -368,3 +381,35 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+/**
+ * тест на автомат
+ */
+fun freePlaces(places: MutableList<MutableList<Boolean>>, requests: Map<String, Pair<Int, Int>>): MutableMap<String, Array<Int>> {
+    val changedPlaces = mutableListOf<MutableList<Boolean>>()
+    val peopleAndPlaces = mutableMapOf<String, Array<Int>>()
+    var reservedPlaces = arrayOf<Int>()
+    var check = 0
+    for ((key, value) in requests) {
+        for (j in 0 until places[value.first].size) {
+            if (!places[value.first][j]) check++
+        }
+        if ((key.matches(Regex("""\w+"""))) && (value.second < check)) {
+            for (i in 0 until places[value.first].size) {
+                var neededPlaces = value.second
+                while (neededPlaces > 0) {
+                    if (places[value.first][i]) {
+                        changedPlaces[i] += (true)
+                    } else {
+                        changedPlaces[i] += (true)
+                        reservedPlaces += i
+                        neededPlaces--
+                    }
+                }
+            }
+            peopleAndPlaces[key] = reservedPlaces
+        } else throw IllegalStateException()
+    }
+    return peopleAndPlaces
+}
+

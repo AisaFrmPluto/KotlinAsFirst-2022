@@ -69,7 +69,7 @@ class Tests {
         assertEquals("+42566789", flattenPhoneNumber("+42(56 -- 67)89"))
         assertEquals("", flattenPhoneNumber("ab-123"))
         assertEquals("", flattenPhoneNumber("134_+874"))
-        assertEquals("", flattenPhoneNumber("+ 6( )4"))
+        assertEquals("", flattenPhoneNumber("+7(932)(921)(415)"))
     }
 
     @Test
@@ -168,5 +168,28 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
+    }
+
+    fun freePlaces() {
+        assertEquals(
+            mutableMapOf("Вася" to arrayOf(1, 2), "Петя" to mutableListOf(1)), freePlaces(
+                mutableListOf(
+                    mutableListOf(true, false, false, false, true, true),
+                    mutableListOf(true, false, true, false)
+                ), mapOf(
+                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
+                )
+            )
+        )
+        assertThrows(IllegalStateException::class.java) {
+            freePlaces(
+                mutableListOf(
+                    mutableListOf(true, true, true, true, true, true),
+                    mutableListOf(true, false, true, false)
+                ), mapOf(
+                    "Вася" to Pair(0, 2), "Петя" to Pair(1, 1)
+                )
+            )
+        }
     }
 }

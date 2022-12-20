@@ -3,7 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import kotlin.math.max
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -77,15 +76,14 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    val list = substrings.toSet().toList()
     val txt = File(inputName).readText().toLowerCase()
     val result = mutableMapOf<String, Int>()
-    for (i in list.indices) {
-        if (!result.contains(list[i]))
-            result[list[i]] = 0
+    for (i in substrings) {
+        if (!result.contains(i))
+            result[i] = 0
         for (j in txt.indices)
-            if (txt.startsWith(list[i].toLowerCase(), j))
-                result[list[i]] = result[list[i]]!! + 1
+            if (txt.startsWith(i.toLowerCase(), j))
+                result[i] = result[i]!! + 1
     }
     return result
 }
@@ -148,10 +146,8 @@ fun sibilants(inputName: String, outputName: String) {
  */
 fun max(inputName: String, outputName: String): Int {
     var maxLength = 0
-    for (line in File(inputName).readLines()) {
+    for (line in File(inputName).readLines())
         if (line.trim().length > maxLength) maxLength = line.trim().length
-        else continue
-    }
     return maxLength
 }
 
