@@ -377,8 +377,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val kindOfTr = mutableListOf<String>()
     val prices = MutableList(treasures.size + 1) { MutableList(capacity + 1) { 0 } }
     //if I have to have numbers to deal with inside this list https://www.techiedelight.com/create-a-list-of-fixed-size-in-kotlin/
-    var check = capacity
     var counter = treasures.size
+    var check = capacity
     val result = mutableListOf<String>()
     for ((key, value) in treasures) {
         valueOfTr.add(value.second)
@@ -400,6 +400,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         counter--
     }
+    result.reverse()
     var sum = 0
     for (k in 0 until result.size) {
         sum += treasures[result[k]]!!.first
