@@ -371,28 +371,33 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
+
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val weightOfTr = mutableListOf<Int>()
     val valueOfTr = mutableListOf<Int>()
     val kindOfTr = mutableListOf<String>()
     val prices = MutableList(treasures.size + 1) { MutableList(capacity + 1) { 0 } }
-    //if I have to have numbers to deal with inside this list https://www.techiedelight.com/create-a-list-of-fixed-size-in-kotlin/
-    var counter = treasures.size
-    var check = capacity
-    val result = mutableListOf<String>()
+
     for ((key, value) in treasures) {
         valueOfTr.add(value.second)
         weightOfTr.add(value.first)
         kindOfTr.add(key)
     }
+
     for (i in 1..treasures.size) {
         for (j in 0..capacity) {
             if (j >= weightOfTr[i - 1]) {
                 prices[i][j] =
                     prices[i - 1][j].coerceAtLeast(prices[i - 1][j - weightOfTr[i - 1]] + valueOfTr[i - 1])
+            } else {
+                prices[i][j] = prices[i - 1][j]
             }
         }
     }
+
+    val result = mutableListOf<String>()
+    var counter = treasures.size
+    var check = capacity
     while (counter > 0) {
         if (prices[counter][check] != prices[counter - 1][check]) {
             result.add(kindOfTr[counter - 1])
@@ -400,13 +405,16 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         counter--
     }
+
     result.reverse()
     var sum = 0
     for (k in 0 until result.size) {
         sum += treasures[result[k]]!!.first
     }
-    if (result.size != 1 && result.isNotEmpty() && sum > capacity) result -= result[0]
+
+    if (result.size > 1 && sum > capacity) {
+        result -= result[0]
+    }
+
     return result.toSet()
 }
-
-
